@@ -2,13 +2,26 @@ export const siteConfig = {
   name: "ReplyForge",
   url: "https://replyforge.fr",
   description:
-    "Agence SEO spécialisée hôtellerie. Nous aidons les hôtels indépendants à grimper dans Google, capter plus de réservations directes et réduire leur dépendance aux OTA.",
-  tagline: "Plus de réservations directes. Moins de Booking.",
+    "ReplyForge répond automatiquement à chaque avis Google de votre hôtel. Notre IA personnalise chaque réponse pour fidéliser vos clients et faire remonter votre fiche dans les résultats locaux.",
+  tagline: "Répondez à 100% de vos avis Google — automatiquement.",
   email: "contact@replyforge.fr",
-  // Lien Calendly : à remplacer par votre vrai lien
   calendlyUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ??
-    "https://calendly.com/replyforge/audit-seo-hotelier",
+    "https://calendly.com/replyforge/demo",
+  pricing: {
+    oneShot: {
+      label: "Démarrage",
+      price: "150€",
+      cadence: "une seule fois",
+      promise: "Nous répondons à tous vos avis Google déjà publiés.",
+    },
+    subscription: {
+      label: "Continu",
+      price: "69€",
+      cadence: "par mois",
+      promise: "Réponses automatiques à chaque nouvel avis, en continu.",
+    },
+  },
   social: {
     linkedin: "https://www.linkedin.com/company/replyforge",
   },

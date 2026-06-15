@@ -11,10 +11,7 @@ export function CTA() {
       <Container>
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl border border-[var(--color-gold-400)]/20 noise-overlay">
-            <div
-              aria-hidden
-              className="absolute inset-0 mesh-gradient opacity-90"
-            />
+            <div aria-hidden className="absolute inset-0 mesh-gradient opacity-90" />
             <div
               aria-hidden
               className="absolute inset-0 bg-gradient-to-br from-[var(--color-ink-900)] via-[var(--color-ink-800)] to-[var(--color-ink-900)]"
@@ -26,27 +23,26 @@ export function CTA() {
             <div className="relative grid gap-10 px-8 py-16 sm:px-12 sm:py-20 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16 lg:px-16 lg:py-24">
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-gold-400)]">
-                  Prochaine étape
+                  Prêt à démarrer
                 </p>
                 <h2 className="font-display mt-5 text-balance text-4xl leading-[1.05] text-[var(--color-foreground)] md:text-5xl lg:text-[60px]">
-                  30 minutes pour voir{" "}
+                  Vos avis Google,{" "}
                   <span className="italic text-[var(--color-gold-300)]">
-                    combien vous coûte
+                    on s&apos;en occupe
                   </span>{" "}
-                  Booking.
+                  dès demain.
                 </h2>
                 <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)]">
-                  On regarde ensemble vos chiffres, votre marché, votre
-                  positionnement actuel, et on vous donne une projection chiffrée
-                  des gains atteignables sur 12 mois. Sans engagement, sans
-                  argumentaire commercial.
+                  15 minutes de mise en service. Tous vos anciens avis traités
+                  sous 7 jours. Puis chaque nouvel avis reçoit une réponse
+                  automatiquement, en continu.
                 </p>
                 <ul className="mt-7 grid gap-2 text-sm text-[var(--color-pearl-200)] sm:grid-cols-2">
                   {[
-                    "Audit Google Business Profile",
-                    "Analyse concurrentielle locale",
-                    "Projection de marge récupérable",
-                    "Plan d'action chiffré",
+                    "Connexion fiche Google en 24h",
+                    "Réponses dans votre ton",
+                    "Sans engagement",
+                    "Annulable à tout moment",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-2">
                       <span
@@ -60,19 +56,19 @@ export function CTA() {
               </div>
               <div className="flex flex-col gap-3">
                 <Button href="/contact" size="lg" className="w-full">
-                  Choisir un créneau
+                  Démarrer à 69€/mois
                   <ArrowRight size={18} />
                 </Button>
                 <Button
-                  href="/methode"
+                  href="#pricing"
                   variant="secondary"
                   size="lg"
                   className="w-full"
                 >
-                  Lire la méthode
+                  Voir les tarifs
                 </Button>
                 <p className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-pearl-500)]">
-                  Audit offert · 30 minutes · Visio ou téléphone
+                  150€ pour rattraper · 69€/mois ensuite
                 </p>
               </div>
             </div>

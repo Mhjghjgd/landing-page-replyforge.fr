@@ -1,5 +1,6 @@
 "use client";
 
+import { Play, Quote } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
@@ -7,45 +8,44 @@ import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 const stats = [
   {
-    value: 147,
+    value: 100,
     suffix: "%",
-    label: "Hausse moyenne du trafic organique",
-    sub: "12 mois après le lancement",
+    label: "Taux de réponse atteint",
+    sub: "Sur tous les avis Google reçus",
+  },
+  {
+    value: 4.7,
+    suffix: "★",
+    label: "Note moyenne après 6 mois",
+    sub: "Versus 4,2 avant accompagnement",
+    decimals: 1,
   },
   {
     value: 38,
     suffix: "%",
-    label: "Part des réservations directes",
-    sub: "Vs 12% à l'arrivée du client",
+    label: "Hausse des clics vers la fiche",
+    sub: "Mesurée dans Google Business",
   },
   {
-    value: 4.2,
-    suffix: "×",
-    label: "ROI moyen sur 18 mois",
-    sub: "Versus les commissions OTA évitées",
-    decimals: 1,
-  },
-  {
-    value: 1.3,
+    value: 5,
     suffix: "s",
-    label: "Temps de chargement médian",
-    sub: "Sur tous les sites livrés",
-    decimals: 1,
+    label: "Pour générer chaque réponse",
+    sub: "Publiée automatiquement",
   },
 ];
 
 const testimonials = [
   {
-    quote:
-      "En 9 mois, on est passé de 8% à 31% de réservations directes. Cette année, on a renégocié à la baisse notre contrat Booking — c'est ReplyForge qui nous a donné cette marge de manœuvre.",
-    author: "Placeholder — Directeur·rice général·e",
-    hotel: "Hôtel 4★ · Centre-ville historique",
+    hotel: "Hôtel 4★ · Centre-ville",
+    duration: "Témoignage vidéo · 1 min 12",
   },
   {
-    quote:
-      "On nous avait promis du SEO partout. ReplyForge est la première équipe qui a vraiment compris la saisonnalité hôtelière, le yield, et qui parle business — pas jargon technique.",
-    author: "Placeholder — Propriétaire",
-    hotel: "Maison d'hôtes 5★ · Provence",
+    hotel: "Maison d'hôtes · Sud-Est",
+    duration: "Témoignage vidéo · 2 min 03",
+  },
+  {
+    hotel: "Petite chaîne · 5 établissements",
+    duration: "Témoignage vidéo · 1 min 48",
   },
 ];
 
@@ -63,8 +63,8 @@ export function Proof() {
             .
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)]">
-            Moyennes observées sur l&apos;ensemble des hôtels accompagnés. Chaque
-            chiffre est traçable dans Google Search Console et votre PMS.
+            Moyennes observées sur les hôtels accompagnés. Chaque chiffre est
+            traçable directement dans votre Google Business Profile.
           </p>
         </Reveal>
 
@@ -97,34 +97,63 @@ export function Proof() {
           ))}
         </RevealGroup>
 
-        <div className="mt-20 grid gap-6 lg:grid-cols-2">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.author} delay={i * 0.1}>
-              <figure className="relative flex h-full flex-col gap-6 rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-ink-900)] to-[var(--color-ink-800)] p-8 lg:p-10">
-                <svg
-                  aria-hidden
-                  width="40"
-                  height="32"
-                  viewBox="0 0 40 32"
-                  className="text-[var(--color-gold-400)]/30"
-                  fill="currentColor"
-                >
-                  <path d="M0 32V20.8C0 9.6 6.4 1.6 17.6 0v8c-4.8 1.6-7.2 4.8-7.2 9.6h7.2V32H0zm22.4 0V20.8C22.4 9.6 28.8 1.6 40 0v8c-4.8 1.6-7.2 4.8-7.2 9.6H40V32H22.4z" />
-                </svg>
-                <blockquote className="font-display text-xl leading-relaxed text-[var(--color-foreground)] lg:text-2xl">
-                  « {t.quote} »
-                </blockquote>
-                <figcaption className="mt-auto flex flex-col gap-0.5 border-t border-[var(--color-border)]/60 pt-5">
-                  <span className="text-sm font-medium text-[var(--color-pearl-200)]">
-                    {t.author}
-                  </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-gold-400)]">
-                    {t.hotel}
-                  </span>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
+        <div className="mt-24">
+          <Reveal className="text-center">
+            <div className="flex items-center justify-center gap-3">
+              <Quote size={18} className="text-[var(--color-gold-400)]" aria-hidden />
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-gold-400)]">
+                Témoignages clients
+              </p>
+            </div>
+            <h3 className="font-display mt-5 text-balance text-3xl leading-tight text-[var(--color-foreground)] md:text-4xl">
+              Ce que disent les hôteliers qui utilisent ReplyForge.
+            </h3>
+          </Reveal>
+
+          <RevealGroup className="mt-12 grid gap-6 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <RevealItem key={t.hotel}>
+                <article className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-ink-800)] via-[var(--color-ink-900)] to-[var(--color-ink-950)] transition-colors hover:border-[var(--color-gold-400)]/30">
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-[radial-gradient(at_30%_30%,rgba(196,151,58,0.15),transparent_60%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 p-8 text-center">
+                    <div
+                      aria-hidden
+                      className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--color-gold-400)]/40 bg-[var(--color-ink-950)]/80 backdrop-blur-sm transition-transform duration-500 group-hover:scale-110"
+                    >
+                      <Play
+                        size={22}
+                        className="ml-1 fill-[var(--color-gold-300)] text-[var(--color-gold-300)]"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-pearl-500)]">
+                        Témoignage vidéo à venir
+                      </p>
+                      <p className="font-display text-lg text-[var(--color-foreground)]">
+                        {t.hotel}
+                      </p>
+                      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-gold-400)]">
+                        {t.duration}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-[var(--color-gold-400)]/30 to-transparent"
+                  />
+                </article>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+
+          <Reveal delay={0.2} className="mt-8 text-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-pearl-500)]">
+              Vidéos YouTube / Vimeo à intégrer dès leur tournage
+            </p>
+          </Reveal>
         </div>
       </Container>
     </section>

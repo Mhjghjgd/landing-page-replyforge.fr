@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import {
-  Search,
-  FileText,
-  Wrench,
-  LineChart,
   Link2,
-  Shield,
+  Mic,
+  Sparkles,
+  Send,
+  LineChart,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/ui/page-header";
@@ -14,88 +13,75 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { CTA } from "@/components/sections/cta";
 
 export const metadata: Metadata = {
-  title: "Méthode SEO hôtelière",
+  title: "Méthode — Comment ça marche",
   description:
-    "Notre méthodologie complète pour faire grimper votre hôtel dans Google : audit, technique, contenu, autorité, conversion. Transparente et chiffrée.",
+    "La méthode ReplyForge en détail : connexion à votre fiche Google, calibrage du ton de votre établissement, réponses générées par IA et publiées automatiquement.",
 };
 
 const phases = [
   {
-    icon: Search,
-    n: "Phase 01",
-    title: "Diagnostic & cartographie",
-    body: "Tout part d'une analyse honnête de votre situation. Nous auditons votre site, votre fiche Google Business Profile, vos OTA, vos concurrents directs, et la demande réelle sur vos requêtes-clés.",
-    deliverables: [
-      "Audit SEO technique (200+ points de contrôle)",
-      "Cartographie sémantique du marché local",
-      "Analyse concurrentielle des 10 hôtels proches",
-      "Benchmark Booking : ce que vous payez vs ce que ça vous rapporte",
-      "Plan d'action priorisé sur 12 mois",
-    ],
-  },
-  {
-    icon: Wrench,
-    n: "Phase 02",
-    title: "Refonte technique",
-    body: "Un site rapide, structuré, accessible. C'est la base non-négociable : Google ne classera jamais bien un site lent ou mal structuré, et un visiteur n'attendra pas qu'il charge.",
-    deliverables: [
-      "Optimisation Core Web Vitals (LCP < 2,5s)",
-      "Implémentation des schemas Hotel + Room + LocalBusiness",
-      "Restructuration de l'architecture de l'information",
-      "Optimisation des images (WebP/AVIF, lazy load)",
-      "Configuration du moteur de réservation",
-    ],
-  },
-  {
-    icon: FileText,
-    n: "Phase 03",
-    title: "Contenu éditorial",
-    body: "Ce qu'on écrit sur votre site est ce qui vous distingue. Pages chambres, expériences, restaurant, guide local — chaque mot est pensé pour Google et pour faire rêver le voyageur.",
-    deliverables: [
-      "Réécriture des pages chambres (signature éditoriale)",
-      "Création des pages destination & expériences",
-      "Guide local SEO (10–30 articles par an)",
-      "Optimisation des pages tarifs et offres",
-      "Cohérence ton de voix sur tout le site",
-    ],
-  },
-  {
     icon: Link2,
-    n: "Phase 04",
-    title: "Autorité & backlinks",
-    body: "Google fait confiance aux sites vers qui d'autres sites pointent. Nous travaillons votre autorité avec des liens de presse, guides de voyage, partenaires locaux et institutionnels.",
+    n: "Étape 01",
+    title: "Connexion à votre fiche Google",
+    body: "On vous envoie une demande d'accès gestionnaire sur votre Google Business Profile. Vous validez en un clic. C'est exactement le même mécanisme que d'ajouter un employé à votre fiche — vous gardez la propriété et le contrôle complet.",
     deliverables: [
-      "Stratégie netlinking éditorial",
-      "Relations presse hôtellerie / tourisme",
-      "Partenariats locaux (OT, guides, médias)",
-      "Optimisation Google Business Profile",
-      "Gestion des avis et signaux d'engagement",
+      "Demande d'accès gestionnaire envoyée",
+      "Validation en un clic de votre côté",
+      "Vérification que tous les avis remontent bien",
+      "Aucun changement visible côté client",
+      "Mise en service sous 24h",
+    ],
+  },
+  {
+    icon: Mic,
+    n: "Étape 02",
+    title: "Calibrage du ton de votre hôtel",
+    body: "Avant qu'une seule réponse soit publiée, on apprend à parler comme vous. Vocabulaire, ton, signature, valeurs : on définit ensemble ce qui doit transparaître dans chaque réponse.",
+    deliverables: [
+      "Questionnaire de 10 minutes (style, ton)",
+      "Validation de la signature de fin",
+      "Choix du tutoiement / vouvoiement",
+      "Sujets à mettre en avant (gastronomie, calme, terrasse…)",
+      "Mots à éviter ou à ne jamais utiliser",
+    ],
+  },
+  {
+    icon: Sparkles,
+    n: "Étape 03",
+    title: "Génération des réponses par IA",
+    body: "Dès qu'un nouvel avis tombe sur votre fiche, notre IA le lit, en comprend les nuances, et génère une réponse personnalisée. Chaque réponse reprend les éléments concrets de l'avis : nom du client, point positif mentionné, critique éventuelle.",
+    deliverables: [
+      "Détection en temps réel des nouveaux avis",
+      "Analyse du contenu et du contexte",
+      "Génération en moins de 5 secondes",
+      "Réponse personnalisée à chaque avis",
+      "Traitement des critiques sans défensive",
+    ],
+  },
+  {
+    icon: Send,
+    n: "Étape 04",
+    title: "Publication automatique",
+    body: "Pour les avis positifs et neutres, la réponse est publiée automatiquement, dans les heures qui suivent. Pour les avis négatifs (1 ou 2 étoiles), on peut activer la validation manuelle : vous recevez la réponse par mail, vous approuvez ou modifiez en un clic.",
+    deliverables: [
+      "Publication auto pour 3★, 4★ et 5★",
+      "Mode validation pour les 1★ et 2★ (optionnel)",
+      "Notification email à chaque réponse publiée",
+      "Historique consultable à tout moment",
+      "Désactivation possible à tout moment",
     ],
   },
   {
     icon: LineChart,
-    n: "Phase 05",
-    title: "Pilotage & croissance",
-    body: "Chaque mois, vous voyez ce qui progresse, ce qui ne progresse pas, et ce qu'on fait pour corriger. Pas de rapport opaque — des indicateurs business clairs.",
+    n: "Étape 05",
+    title: "Suivi & ajustements",
+    body: "Chaque mois, vous recevez un récap : nombre d'avis traités, évolution de la note moyenne, évolution des clics sur votre fiche. Si quelque chose doit être ajusté dans le ton, vous nous le dites — on recalibre.",
     deliverables: [
-      "Dashboard mensuel personnalisé",
-      "KPIs business : revenus directs, part OTA, RevPAR direct",
-      "Point mensuel de 45 min avec votre direction",
-      "Itérations continues sur le contenu et la technique",
-      "Veille concurrentielle permanente",
-    ],
-  },
-  {
-    icon: Shield,
-    n: "Phase 06",
-    title: "Anti-dépendance OTA",
-    body: "Notre objectif final : que votre canal direct devienne suffisamment puissant pour vous donner du pouvoir de négociation face à Booking — et idéalement, pour vous en passer largement.",
-    deliverables: [
-      "Stratégie d'incitation à la réservation directe",
-      "Best Rate Guarantee intelligent",
-      "Récupération d'emails et fidélisation",
-      "Programme de récompenses direct booker",
-      "Conseil sur la renégociation des contrats OTA",
+      "Récap mensuel par email",
+      "Évolution de la note Google",
+      "Évolution des vues et clics sur la fiche",
+      "Ajustements de ton à la demande",
+      "Conseils sur les sujets qui reviennent dans les avis",
     ],
   },
 ];
@@ -107,14 +93,14 @@ export default function MethodPage() {
         eyebrow="Notre méthode"
         title={
           <>
-            Six phases.{" "}
+            Cinq étapes.{" "}
             <span className="italic text-[var(--color-gold-300)]">
-              Aucune approximation
+              Aucune complexité
             </span>
             .
           </>
         }
-        subtitle="Voici exactement comment nous transformons votre canal direct en machine à réservations. Pas de promesses creuses, pas de jargon — la méthode complète."
+        subtitle="Voici exactement comment on s'occupe de vos avis Google. De la première connexion à la première réponse publiée, en passant par le calibrage du ton de votre hôtel."
       />
 
       <section className="py-24 lg:py-32">
@@ -145,7 +131,7 @@ export default function MethodPage() {
                   </div>
                   <div className="lg:col-span-7 lg:[direction:ltr]">
                     <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-ink-900)]/60 p-8 lg:p-10">
-                      <Eyebrow>Livrables</Eyebrow>
+                      <Eyebrow>Ce qu&apos;on fait concrètement</Eyebrow>
                       <ul className="mt-7 flex flex-col gap-4">
                         {phase.deliverables.map((d, j) => (
                           <li

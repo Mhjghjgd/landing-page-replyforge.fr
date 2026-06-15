@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "ReplyForge — Agence SEO spécialisée hôtellerie";
+export const alt = "ReplyForge — Réponses automatiques aux avis Google";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,7 +47,7 @@ export default async function OG() {
               maxWidth: 1000,
             }}
           >
-            Plus de réservations directes. Moins de Booking.
+            Répondez à 100% de vos avis Google. Automatiquement.
           </div>
           <div
             style={{
@@ -58,7 +58,7 @@ export default async function OG() {
               lineHeight: 1.4,
             }}
           >
-            Agence SEO spécialisée hôtellerie. Nous reconstruisons votre canal direct.
+            Notre IA répond à chaque avis. Vous remontez dans Google. Vous ne faites rien.
           </div>
         </div>
 
@@ -75,7 +75,7 @@ export default async function OG() {
           }}
         >
           <div>replyforge.fr</div>
-          <div style={{ color: "#C4973A" }}>Audit offert</div>
+          <div style={{ color: "#C4973A" }}>69€/mois · sans engagement</div>
         </div>
       </div>
     ),

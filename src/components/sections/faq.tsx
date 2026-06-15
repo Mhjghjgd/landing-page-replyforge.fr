@@ -9,28 +9,28 @@ import { Reveal } from "@/components/ui/reveal";
 
 const faqs = [
   {
-    q: "En combien de temps voit-on les premiers résultats ?",
-    a: "Les premiers gains techniques (vitesse, Core Web Vitals, fiches Google) sont visibles dès le 1er mois. Les remontées de positions arrivent entre le mois 3 et le mois 6 selon votre marché. Les vraies hausses de réservations directes s'installent à partir du mois 4–6 et se consolident sur 12 mois.",
+    q: "Est-ce que les réponses sonnent vraiment comme nous ?",
+    a: "Oui. Avant le démarrage, on vous pose quelques questions sur votre établissement : ton, valeurs, signature de fin, vocabulaire. Notre IA s'aligne sur votre style. Si une réponse ne vous plaît pas, vous nous le dites, on ajuste — comme avec un employé.",
   },
   {
-    q: "Travaillez-vous avec mon agence digitale actuelle ?",
-    a: "Oui, fréquemment. Nous prenons en charge la stratégie SEO et le contenu pendant que votre agence ou freelance gère le reste. Nous fournissons des spécifications précises et des comptes-rendus mensuels que vos équipes peuvent exploiter directement.",
+    q: "Et si un client laisse un avis très négatif ?",
+    a: "Les avis sensibles peuvent passer en mode validation manuelle : vous recevez la réponse proposée par mail, vous l'approuvez ou la modifiez en un clic avant publication. C'est paramétrable selon le nombre d'étoiles.",
   },
   {
-    q: "Quel est l'investissement attendu ?",
-    a: "Nos accompagnements démarrent à partir d'un budget équivalent à 1–2 nuitées vendues par jour. La logique : ce que vous payez en SEO est largement compensé par la baisse des commissions OTA et la hausse du panier moyen sur le canal direct. L'audit initial est offert pour vous donner une projection honnête.",
+    q: "Combien de temps pour traiter mes anciens avis ?",
+    a: "L'offre Démarrage (150€) couvre tous vos avis déjà publiés, en une fois. Sous 7 jours, tous vos avis sans réponse en ont une. Ensuite, l'offre Continue à 69€/mois prend le relais sur les nouveaux avis.",
   },
   {
-    q: "Garantissez-vous des positions sur Google ?",
-    a: "Personne ne peut garantir une position précise — et qui le fait vous ment. Ce que nous garantissons : une transparence totale sur les actions menées, un reporting de progression mensuel, et une révision du plan d'action si les KPIs ne progressent pas comme prévu après 6 mois.",
+    q: "Comment ça se passe pour se connecter à ma fiche Google ?",
+    a: "On vous envoie une demande d'accès gestionnaire sur votre Google Business Profile. Vous validez en un clic. C'est exactement la même chose que d'ajouter un employé à votre fiche. Vous gardez 100% du contrôle et pouvez retirer l'accès à tout moment.",
   },
   {
-    q: "Et si on est déjà bien classé sur Booking ?",
-    a: "C'est précisément ce qui doit vous inquiéter. Tant que votre visibilité dépend d'un acteur tiers, vous ne possédez ni vos clients, ni votre marge. Notre rôle est de construire votre propre canal — qui devient un actif de l'hôtel, pas un loyer perpétuel.",
+    q: "Est-ce que vous garantissez de remonter sur Google ?",
+    a: "Personne ne peut promettre une position précise. Ce qu'on garantit : 100% de vos avis recevront une réponse de qualité, dans les heures qui suivent leur publication. C'est exactement ce signal que Google récompense — l'effet sur le classement local arrive en général sous 4 à 8 semaines.",
   },
   {
-    q: "Travaillez-vous partout en France ?",
-    a: "Oui. Notre méthode est nationale, nos équipes sont basées à Paris mais nous accompagnons des établissements partout en France métropolitaine, en Corse et dans les DOM-TOM. Pour les hôtels parisiens, nous proposons des rendez-vous sur place.",
+    q: "Je peux arrêter quand je veux ?",
+    a: "Oui. L'abonnement à 69€/mois est sans engagement. Vous résiliez en un mail, on coupe à la fin du mois en cours. Aucune pénalité.",
   },
 ];
 

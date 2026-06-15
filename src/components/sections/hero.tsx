@@ -1,17 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden noise-overlay">
-      <div
-        aria-hidden
-        className="absolute inset-0 mesh-gradient opacity-90"
-      />
+      <div aria-hidden className="absolute inset-0 mesh-gradient opacity-90" />
       <div
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-gold-400)]/30 to-transparent"
@@ -24,13 +21,9 @@ export function Hero() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto flex max-w-3xl items-center justify-center gap-2 rounded-full border border-[var(--color-gold-400)]/25 bg-[var(--color-ink-900)]/60 px-4 py-1.5 backdrop-blur-sm w-fit"
         >
-          <Sparkles
-            size={14}
-            className="text-[var(--color-gold-400)]"
-            aria-hidden
-          />
+          <Sparkles size={14} className="text-[var(--color-gold-400)]" aria-hidden />
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-pearl-200)]">
-            Agence SEO · 100% hôtellerie
+            IA · Réponses aux avis Google · Hôtellerie
           </span>
         </motion.div>
 
@@ -38,12 +31,12 @@ export function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display mx-auto mt-8 max-w-5xl text-center text-balance text-[44px] leading-[1.05] tracking-tight text-[var(--color-foreground)] sm:text-[56px] md:text-[72px] lg:text-[86px]"
+          className="font-display mx-auto mt-8 max-w-5xl text-center text-balance text-[44px] leading-[1.05] tracking-tight text-[var(--color-foreground)] sm:text-[56px] md:text-[70px] lg:text-[84px]"
         >
-          Plus de réservations{" "}
+          Répondez à{" "}
           <span className="relative inline-block">
             <span className="bg-gradient-to-r from-[var(--color-gold-200)] via-[var(--color-gold-400)] to-[var(--color-gold-300)] bg-clip-text italic text-transparent">
-              directes
+              100%
             </span>
             <svg
               aria-hidden
@@ -66,10 +59,10 @@ export function Hero() {
                 </linearGradient>
               </defs>
             </svg>
-          </span>
-          .
+          </span>{" "}
+          de vos avis Google.
           <br />
-          Moins de Booking.
+          Automatiquement.
         </motion.h1>
 
         <motion.p
@@ -78,9 +71,12 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.25 }}
           className="mx-auto mt-8 max-w-2xl text-center text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)] md:text-xl"
         >
-          Nous aidons les hôteliers indépendants à dominer Google, capter les
-          clients <em className="text-[var(--color-foreground)] not-italic font-medium">avant</em> les OTA, et reconstruire une marge
-          qu&apos;aucune commission ne grignote.
+          Notre IA lit chaque avis client, écrit une réponse personnalisée, et
+          la publie sur votre fiche Google.{" "}
+          <em className="not-italic font-medium text-[var(--color-foreground)]">
+            Vous remontez dans les résultats locaux
+          </em>{" "}
+          sans rien faire.
         </motion.p>
 
         <motion.div
@@ -90,11 +86,11 @@ export function Hero() {
           className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <Button href="/contact" size="lg">
-            Réserver un audit SEO offert
+            Démarrer à 69€/mois
             <ArrowRight size={18} />
           </Button>
-          <Button href="/methode" variant="ghost" size="lg">
-            Découvrir notre méthode
+          <Button href="#mockup" variant="ghost" size="lg">
+            Voir un exemple
           </Button>
         </motion.div>
 
@@ -104,15 +100,25 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.7 }}
           className="mt-14 flex flex-col items-center gap-4"
         >
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-pearl-500)]">
-            Pensé pour
-          </p>
+          <div className="flex items-center gap-2">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <Star
+                key={i}
+                size={14}
+                className="fill-[var(--color-gold-400)] text-[var(--color-gold-400)]"
+                aria-hidden
+              />
+            ))}
+            <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-pearl-300)]">
+              Google récompense les hôtels qui répondent
+            </span>
+          </div>
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-[var(--color-pearl-300)]">
-            <li>Hôtels indépendants 3–5 étoiles</li>
+            <li>Hôtels indépendants</li>
             <li className="hidden sm:inline-block h-1 w-1 rounded-full bg-[var(--color-gold-400)]/60" />
-            <li>Maisons d&apos;hôtes premium</li>
+            <li>Maisons d&apos;hôtes</li>
             <li className="hidden sm:inline-block h-1 w-1 rounded-full bg-[var(--color-gold-400)]/60" />
-            <li>Petites chaînes hôtelières</li>
+            <li>Petites chaînes</li>
           </ul>
         </motion.div>
       </Container>

@@ -9,14 +9,14 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Prendre rendez-vous",
   description:
-    "Réservez 30 minutes avec ReplyForge. On regarde votre situation, on chiffre les gains, on vous laisse repartir avec un plan — gratuit, sans engagement.",
+    "Réservez 20 minutes avec ReplyForge. On regarde vos avis Google ensemble, on vous montre une réponse générée en direct, vous décidez ensuite.",
 };
 
 const expectations = [
-  "Audit Google Business Profile en direct",
-  "Analyse rapide de vos 5 concurrents locaux",
-  "Projection chiffrée des gains à 12 mois",
-  "Plan d'action priorisé que vous gardez",
+  "Audit de vos avis Google en direct",
+  "Démo : une réponse générée par notre IA, sous vos yeux",
+  "Calibrage du ton de votre établissement",
+  "Mise en route en 24h si vous démarrez",
 ];
 
 export default function ContactPage() {
@@ -31,16 +31,16 @@ export default function ContactPage() {
           <Reveal className="lg:col-span-5">
             <Eyebrow>Prendre rendez-vous</Eyebrow>
             <h1 className="font-display mt-6 text-balance text-4xl leading-[1.05] text-[var(--color-foreground)] md:text-5xl lg:text-6xl">
-              30 minutes pour reprendre{" "}
+              20 minutes pour voir{" "}
               <span className="italic text-[var(--color-gold-300)]">
-                le contrôle
+                ReplyForge en action
               </span>
               .
             </h1>
             <p className="mt-6 text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)]">
-              Choisissez directement un créneau qui vous convient. On vous
-              appelle à l&apos;heure dite. Aucune préparation requise — on
-              s&apos;occupe de tout en amont.
+              On regarde vos avis Google ensemble, et notre IA en répond à un
+              en direct — vous voyez exactement ce que ça donnera sur votre
+              fiche. Ensuite, vous décidez.
             </p>
 
             <div className="mt-10 flex flex-col gap-5">
@@ -69,9 +69,9 @@ export default function ContactPage() {
                 <Sparkles size={12} aria-hidden /> 100% offert
               </p>
               <p className="text-sm leading-relaxed text-[var(--color-pearl-300)]">
-                Pas de carte bancaire, pas d&apos;engagement, pas de relance
-                commerciale envahissante. Si on ne peut pas vous aider, on vous
-                le dira en 10 minutes — vous aurez quand même le plan.
+                Pas de carte bancaire, pas d&apos;engagement. Si ReplyForge
+                n&apos;est pas pertinent pour votre établissement, on vous le
+                dit en 5 minutes — pas la peine de perdre du temps.
               </p>
             </div>
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
                   className="mt-0.5 text-[var(--color-gold-400)]"
                   aria-hidden
                 />
-                <span>30 minutes · visio Google Meet ou téléphone</span>
+                <span>20 minutes · visio Google Meet ou téléphone</span>
               </div>
               <div className="flex items-start gap-3 text-sm text-[var(--color-pearl-300)]">
                 <MailIcon

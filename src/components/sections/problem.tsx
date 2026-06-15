@@ -1,30 +1,30 @@
 "use client";
 
-import { TrendingDown, Percent, EyeOff, Users } from "lucide-react";
+import { MessageSquareOff, TrendingDown, Clock, Frown } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 
 const pains = [
   {
-    icon: Percent,
-    title: "15 à 25% de commissions OTA",
-    body: "Chaque nuit vendue via Booking ou Expedia ampute votre marge nette. Sur un hôtel de 30 chambres, c'est plusieurs dizaines de milliers d'euros par an qui s'évaporent.",
-  },
-  {
-    icon: EyeOff,
-    title: "Invisible sur Google",
-    body: "Quand un voyageur tape « hôtel + votre ville », ce sont les OTA qui apparaissent — pas vous. Vous payez pour acheter des clients qui vous cherchaient déjà.",
-  },
-  {
-    icon: Users,
-    title: "Dépendance totale aux plateformes",
-    body: "Un changement d'algorithme Booking, une mauvaise note injuste, une politique tarifaire imposée — et vos revenus chutent du jour au lendemain.",
+    icon: MessageSquareOff,
+    title: "Vos avis Google restent sans réponse",
+    body: "Vous recevez des avis chaque semaine. Vous voudriez bien répondre — mais entre le check-in, le service et la compta, il y a toujours plus urgent. Au bout d'un an, des dizaines d'avis sont restés muets.",
   },
   {
     icon: TrendingDown,
-    title: "Pas de relation client",
-    body: "Vos vrais clients restent ceux des OTA. Pas d'email, pas de fidélisation, pas de bouche-à-oreille direct. Vous repartez de zéro à chaque saison.",
+    title: "Vous descendez dans les résultats locaux",
+    body: "Google le dit clairement : plus un hôtel répond à ses avis, plus il monte dans les résultats. Ne pas répondre, c'est laisser votre concurrent direct prendre la première place.",
+  },
+  {
+    icon: Clock,
+    title: "Vous n'avez pas le temps",
+    body: "Répondre proprement à un avis prend 5 à 10 minutes. À 30 avis par mois, c'est plusieurs heures perdues. Et ça finit toujours par passer en bas de la liste.",
+  },
+  {
+    icon: Frown,
+    title: "Les réponses génériques font fuir les clients",
+    body: "« Merci pour votre avis » à chaque commentaire, c'est pire que rien. Les futurs clients lisent les réponses avant de réserver. Ils veulent voir un vrai hôtelier, pas un robot froid.",
   },
 ];
 
@@ -35,16 +35,15 @@ export function Problem() {
         <Reveal className="mx-auto max-w-3xl text-center">
           <Eyebrow className="justify-center">Le constat</Eyebrow>
           <h2 className="font-display mt-6 text-balance text-4xl leading-[1.1] text-[var(--color-foreground)] md:text-5xl lg:text-[56px]">
-            Vous êtes propriétaire de votre hôtel.
+            Chaque avis sans réponse,
             <br />
             <span className="text-[var(--color-pearl-400)] italic">
-              Booking est propriétaire de vos clients.
+              c&apos;est un client qui ne reviendra pas.
             </span>
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)]">
-            Le secteur hôtelier indépendant a délégué sa visibilité aux OTA.
-            Résultat : une dépendance silencieuse qui ronge la marge année après
-            année.
+            La plupart des hôtels ignorent leurs avis Google. Et le payent
+            deux fois : en clients perdus, et en classement qui chute.
           </p>
         </Reveal>
 

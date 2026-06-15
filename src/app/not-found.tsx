@@ -13,8 +13,8 @@ export default function NotFound() {
         </p>
         <Eyebrow className="justify-center mt-4">Page introuvable</Eyebrow>
         <h1 className="font-display mt-6 text-balance text-3xl leading-[1.1] text-[var(--color-foreground)] md:text-5xl">
-          Cette chambre n&apos;existe{" "}
-          <span className="italic text-[var(--color-gold-300)]">pas dans notre hôtel</span>.
+          Pas d&apos;avis à répondre{" "}
+          <span className="italic text-[var(--color-gold-300)]">ici</span>.
         </h1>
         <p className="mx-auto mt-6 max-w-lg text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)]">
           La page que vous cherchez n&apos;existe pas ou a été déplacée.
