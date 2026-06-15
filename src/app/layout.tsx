@@ -93,7 +93,6 @@ export default function RootLayout({
       addressCountry: "FR",
       addressLocality: "Paris",
     },
-    sameAs: [siteConfig.social.linkedin],
   };
 
   return (

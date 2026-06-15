@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, Play } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { PageHeader } from "@/components/ui/page-header";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
@@ -67,19 +67,6 @@ const cases = [
       { value: 156, suffix: "%", label: "Hausse trafic Google Maps" },
     ],
     duration: "Résultats observés sur 12 mois",
-  },
-];
-
-const videoTestimonials = [
-  {
-    hotel: "Hôtel 4★ · Lyon",
-    name: "Témoignage du directeur",
-    duration: "1 min 12",
-  },
-  {
-    hotel: "Maison d'hôtes · Aix",
-    name: "Témoignage de la propriétaire",
-    duration: "2 min 03",
   },
 ];
 
@@ -175,68 +162,6 @@ export default function ResultsPage() {
               </RevealItem>
             ))}
           </RevealGroup>
-
-          <Reveal className="mt-24">
-            <div className="text-center">
-              <Eyebrow className="justify-center">Témoignages vidéo</Eyebrow>
-              <h2 className="font-display mt-6 text-balance text-3xl leading-tight text-[var(--color-foreground)] md:text-4xl lg:text-5xl">
-                Bientôt en ligne.{" "}
-                <span className="italic text-[var(--color-gold-300)]">
-                  Les hôteliers prennent la parole
-                </span>
-                .
-              </h2>
-            </div>
-          </Reveal>
-
-          <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2">
-            {videoTestimonials.map((t) => (
-              <RevealItem key={t.hotel}>
-                <article className="group relative aspect-video overflow-hidden rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-ink-800)] via-[var(--color-ink-900)] to-[var(--color-ink-950)] transition-colors hover:border-[var(--color-gold-400)]/30">
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-[radial-gradient(at_50%_40%,rgba(196,151,58,0.18),transparent_70%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-8 text-center">
-                    <div
-                      aria-hidden
-                      className="flex h-20 w-20 items-center justify-center rounded-full border border-[var(--color-gold-400)]/40 bg-[var(--color-ink-950)]/80 backdrop-blur-sm transition-transform duration-500 group-hover:scale-110"
-                    >
-                      <Play
-                        size={28}
-                        className="ml-1 fill-[var(--color-gold-300)] text-[var(--color-gold-300)]"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-pearl-500)]">
-                        Témoignage vidéo à venir
-                      </p>
-                      <p className="font-display text-xl text-[var(--color-foreground)]">
-                        {t.name}
-                      </p>
-                      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-gold-400)]">
-                        {t.hotel} · {t.duration}
-                      </p>
-                    </div>
-                  </div>
-                </article>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-
-          <Reveal className="mt-16">
-            <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-ink-900)]/40 p-8 text-center">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-pearl-500)]">
-                Placeholders
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--color-pearl-300)]">
-                Ces cas clients et témoignages vidéo sont des templates prêts à
-                recevoir les vrais contenus. Les vidéos YouTube ou Vimeo
-                pourront être intégrées en remplaçant chaque carte par un
-                composant lecteur.
-              </p>
-            </div>
-          </Reveal>
         </Container>
       </section>
 

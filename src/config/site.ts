@@ -4,10 +4,7 @@ export const siteConfig = {
   description:
     "ReplyForge répond automatiquement à chaque avis Google de votre hôtel. Notre IA personnalise chaque réponse pour fidéliser vos clients et faire remonter votre fiche dans les résultats locaux.",
   tagline: "Répondez à 100% de vos avis Google — automatiquement.",
-  email: "contact@replyforge.fr",
-  calendlyUrl:
-    process.env.NEXT_PUBLIC_CALENDLY_URL ??
-    "https://calendly.com/replyforge/demo",
+  email: "mohamed@replyforge.fr",
   pricing: {
     oneShot: {
       label: "Démarrage",
@@ -21,9 +18,6 @@ export const siteConfig = {
       cadence: "par mois",
       promise: "Réponses automatiques à chaque nouvel avis, en continu.",
     },
-  },
-  social: {
-    linkedin: "https://www.linkedin.com/company/replyforge",
   },
   nav: [
     { label: "Accueil", href: "/" },

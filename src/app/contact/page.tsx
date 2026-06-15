@@ -101,7 +101,7 @@ export default function ContactPage() {
           </Reveal>
 
           <Reveal className="lg:col-span-7" delay={0.15}>
-            <CalendlyEmbed url={siteConfig.calendlyUrl} />
+            <CalendlyEmbed />
             <p className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-pearl-500)]">
               Le calendrier ne s&apos;affiche pas ? Écrivez-nous à{" "}
               <a

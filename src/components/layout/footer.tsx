@@ -24,7 +24,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 lg:col-span-7 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-8 lg:col-span-7">
             <FooterCol title="Navigation">
               {siteConfig.nav.map((n) => (
                 <FooterLink key={n.href} href={n.href}>
@@ -38,11 +38,6 @@ export function Footer() {
                   {n.label}
                 </FooterLink>
               ))}
-            </FooterCol>
-            <FooterCol title="Suivez-nous">
-              <FooterLink href={siteConfig.social.linkedin} external>
-                LinkedIn
-              </FooterLink>
             </FooterCol>
           </div>
         </div>

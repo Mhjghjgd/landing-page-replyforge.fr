@@ -28,37 +28,13 @@ export default function MentionsPage() {
 
             <h2>Éditeur du site</h2>
             <p>
-              Le site <strong>{siteConfig.url}</strong> est édité par{" "}
-              <strong>{siteConfig.name}</strong>.
+              Le site <strong>replyforge.fr</strong> est édité par{" "}
+              <strong>ReplyForge</strong>.
             </p>
-            <ul>
-              <li>
-                <strong>Forme juridique :</strong> [À compléter — SAS, SARL,
-                EI…]
-              </li>
-              <li>
-                <strong>Siège social :</strong> [À compléter — adresse postale]
-              </li>
-              <li>
-                <strong>Capital social :</strong> [À compléter]
-              </li>
-              <li>
-                <strong>RCS :</strong> [À compléter — ville et numéro]
-              </li>
-              <li>
-                <strong>SIRET :</strong> [À compléter]
-              </li>
-              <li>
-                <strong>TVA intracommunautaire :</strong> [À compléter]
-              </li>
-              <li>
-                <strong>Directeur de la publication :</strong> [À compléter]
-              </li>
-              <li>
-                <strong>Contact :</strong>{" "}
-                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-              </li>
-            </ul>
+            <p>
+              Contact :{" "}
+              <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            </p>
 
             <h2>Hébergeur</h2>
             <p>
