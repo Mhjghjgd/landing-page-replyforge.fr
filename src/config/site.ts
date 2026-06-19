@@ -6,15 +6,9 @@ export const siteConfig = {
   tagline: "Répondez à 100% de vos avis Google — automatiquement.",
   email: "mohamed@replyforge.fr",
   pricing: {
-    oneShot: {
-      label: "Démarrage",
-      price: "150€",
-      cadence: "une seule fois",
-      promise: "Nous répondons à tous vos avis Google déjà publiés.",
-    },
     subscription: {
       label: "Continu",
-      price: "69€",
+      price: "89€",
       cadence: "par mois",
       promise: "Réponses automatiques à chaque nouvel avis, en continu.",
     },

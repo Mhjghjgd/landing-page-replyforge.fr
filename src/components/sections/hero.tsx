@@ -86,7 +86,7 @@ export function Hero() {
           className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <Button href="/contact" size="lg">
-            Démarrer à 69€/mois
+            Démarrer à 89€/mois
             <ArrowRight size={18} />
           </Button>
           <Button href="#mockup" variant="ghost" size="lg">

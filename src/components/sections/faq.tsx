@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: "Combien de temps pour traiter mes anciens avis ?",
-    a: "L'offre Démarrage (150€) couvre tous vos avis déjà publiés, en une fois. Sous 7 jours, tous vos avis sans réponse en ont une. Ensuite, l'offre Continue à 69€/mois prend le relais sur les nouveaux avis.",
+    a: "Dès la mise en service, notre IA commence à répondre à vos nouveaux avis en temps réel. Si vous avez des anciens avis sans réponse, on peut les traiter rapidement — parlez-en lors de votre démo.",
   },
   {
     q: "Comment ça se passe pour se connecter à ma fiche Google ?",
@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: "Je peux arrêter quand je veux ?",
-    a: "Oui. L'abonnement à 69€/mois est sans engagement. Vous résiliez en un mail, on coupe à la fin du mois en cours. Aucune pénalité.",
+    a: "Oui. L'abonnement à 89€/mois est sans engagement. Vous résiliez en un mail, on coupe à la fin du mois en cours. Aucune pénalité.",
   },
 ];
 

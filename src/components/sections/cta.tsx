@@ -56,7 +56,7 @@ export function CTA() {
               </div>
               <div className="flex flex-col gap-3">
                 <Button href="/contact" size="lg" className="w-full">
-                  Démarrer à 69€/mois
+                  Démarrer à 89€/mois
                   <ArrowRight size={18} />
                 </Button>
                 <Button
@@ -68,7 +68,7 @@ export function CTA() {
                   Voir les tarifs
                 </Button>
                 <p className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-pearl-500)]">
-                  150€ pour rattraper · 69€/mois ensuite
+                  Sans engagement · résiliable à tout moment
                 </p>
               </div>
             </div>

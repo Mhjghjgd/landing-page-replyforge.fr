@@ -9,24 +9,8 @@ import { Button } from "@/components/ui/button";
 
 const plans = [
   {
-    label: "Démarrage",
-    price: "150€",
-    cadence: "une seule fois",
-    description: "On rattrape le retard. Tous vos anciens avis Google reçoivent une vraie réponse, en quelques jours.",
-    features: [
-      "Traitement de tous vos avis déjà publiés",
-      "Réponses personnalisées et professionnelles",
-      "Ton aligné avec votre établissement",
-      "Publication automatique sur Google",
-      "Livraison sous 7 jours",
-    ],
-    cta: "Rattraper mes avis",
-    href: "/contact",
-    featured: false,
-  },
-  {
     label: "Continu",
-    price: "69€",
+    price: "89€",
     cadence: "par mois",
     description: "On reste là. Chaque nouvel avis reçoit une réponse automatique dans les heures qui suivent sa publication.",
     features: [
@@ -49,19 +33,18 @@ export function Pricing() {
         <Reveal className="mx-auto max-w-3xl text-center">
           <Eyebrow className="justify-center">Tarifs</Eyebrow>
           <h2 className="font-display mt-6 text-balance text-4xl leading-[1.1] text-[var(--color-foreground)] md:text-5xl lg:text-[56px]">
-            Deux offres.{" "}
+            Une offre.{" "}
             <span className="italic text-[var(--color-gold-300)]">
               Zéro surprise
             </span>
             .
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-[var(--color-pearl-300)]">
-            Commencez par rattraper vos anciens avis. Puis laissez l&apos;outil
-            tourner. Vous arrêtez quand vous voulez.
+            Un abonnement mensuel, sans engagement. Vous arrêtez quand vous voulez.
           </p>
         </Reveal>
 
-        <div className="mx-auto mt-16 grid max-w-5xl gap-6 md:grid-cols-2">
+        <div className="mx-auto mt-16 max-w-xl">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.label}
