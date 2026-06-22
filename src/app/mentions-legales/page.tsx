@@ -7,7 +7,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Mentions légales",
   description:
-    "Mentions légales du site replyforge.fr — éditeur, hébergement, propriété intellectuelle.",
+    "Mentions légales du site replyforge.fr — éditeur, hébergeur, nom de domaine, propriété intellectuelle.",
   robots: { index: false, follow: true },
 };
 
@@ -17,7 +17,7 @@ export default function MentionsPage() {
       <PageHeader
         eyebrow="Légal"
         title="Mentions légales"
-        subtitle="Informations légales conformément à la loi pour la confiance dans l'économie numérique (LCEN)."
+        subtitle="Informations légales conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN)."
       />
       <section className="py-20 lg:py-28">
         <Container size="narrow">
@@ -26,59 +26,122 @@ export default function MentionsPage() {
               Dernière mise à jour : {new Date().toLocaleDateString("fr-FR")}
             </p>
 
-            <h2>Éditeur du site</h2>
+            <h2>1. Éditeur du site</h2>
             <p>
-              Le site <strong>replyforge.fr</strong> est édité par{" "}
-              <strong>ReplyForge</strong>.
+              Le site <strong>replyforge.fr</strong> est édité par :
             </p>
-            <p>
-              Contact :{" "}
-              <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-            </p>
+            <ul>
+              <li>
+                <strong>Nom commercial :</strong> ReplyForge
+              </li>
+              <li>
+                <strong>Exploitant :</strong> Mohamed Dekoumi, entrepreneur
+                individuel
+              </li>
+              <li>
+                <strong>SIRET :</strong> en cours d&apos;immatriculation
+              </li>
+              <li>
+                <strong>Email :</strong>{" "}
+                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+              </li>
+            </ul>
 
-            <h2>Hébergeur</h2>
+            <h2>2. Directeur de la publication</h2>
+            <p>Mohamed Dekoumi</p>
+
+            <h2>3. Hébergeur du site vitrine</h2>
             <p>
-              Le site est hébergé par{" "}
+              Le site <strong>replyforge.fr</strong> est hébergé par{" "}
               <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA
-              91789, USA — <a href="https://vercel.com">vercel.com</a>.
+              91789, États-Unis —{" "}
+              <a
+                href="https://vercel.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                vercel.com
+              </a>
+              .
             </p>
-
-            <h2>Propriété intellectuelle</h2>
             <p>
-              L&apos;ensemble du contenu du site (textes, identité visuelle,
-              illustrations, photographies, logos, données et structure) est la
-              propriété exclusive de {siteConfig.name}, sauf mentions contraires
-              explicites. Toute reproduction, représentation, modification,
-              publication ou adaptation, totale ou partielle, par quelque procédé
-              que ce soit, est interdite sans autorisation écrite préalable.
+              L&apos;application client <strong>app.replyforge.fr</strong> est
+              exploitée sur la plateforme ReviewBounce (marque blanche). Son
+              hébergement est assuré par les infrastructures de ce fournisseur.
             </p>
 
-            <h2>Liens hypertextes</h2>
+            <h2>4. Nom de domaine</h2>
             <p>
-              Les liens hypertextes mis en place dans le cadre du présent site en
-              direction d&apos;autres ressources présentes sur le réseau Internet
-              ne sauraient engager la responsabilité de {siteConfig.name}.
+              Le nom de domaine <strong>replyforge.fr</strong> est enregistré
+              auprès de <strong>OVH SAS</strong>, 2 rue Kellermann, 59100
+              Roubaix, France —{" "}
+              <a
+                href="https://www.ovh.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ovh.com
+              </a>
+              .
             </p>
 
-            <h2>Responsabilité</h2>
+            <h2>5. Propriété intellectuelle</h2>
             <p>
-              {siteConfig.name} s&apos;efforce d&apos;assurer au mieux de ses
-              possibilités l&apos;exactitude et la mise à jour des informations
-              diffusées sur ce site. Toutefois, {siteConfig.name} ne peut
-              garantir l&apos;exactitude, la précision ou l&apos;exhaustivité des
-              informations mises à disposition.
+              L&apos;ensemble des éléments constituant le site{" "}
+              <strong>replyforge.fr</strong> (textes, structure, identité
+              visuelle, logotypes, données) est la propriété exclusive de
+              ReplyForge, sauf mentions contraires explicites. Toute
+              reproduction, représentation, modification, publication ou
+              adaptation, totale ou partielle, par quelque procédé que ce soit,
+              est interdite sans autorisation écrite préalable de l&apos;éditeur.
             </p>
 
-            <h2>Droit applicable</h2>
+            <h2>6. Liens hypertextes</h2>
             <p>
-              Le présent site et ses mentions légales sont régis par le droit
-              français. En cas de litige, les tribunaux français seront seuls
-              compétents.
+              Le site peut contenir des liens vers des sites tiers. ReplyForge
+              n&apos;exerce aucun contrôle sur ces sites et décline toute
+              responsabilité quant à leur contenu ou leur disponibilité. La
+              mise en place d&apos;un lien vers replyforge.fr est soumise à
+              l&apos;accord préalable de l&apos;éditeur.
             </p>
 
-            <p className="text-sm italic text-[var(--color-pearl-400)] mt-10">
-              Modèle générique à adapter aux informations légales réelles de la
-              société.
+            <h2>7. Limitation de responsabilité</h2>
+            <p>
+              ReplyForge s&apos;efforce d&apos;assurer l&apos;exactitude et la
+              mise à jour des informations publiées sur ce site vitrine.
+              Toutefois, l&apos;éditeur ne saurait être tenu responsable des
+              omissions, inexactitudes ou carences dans la mise à jour, qu&apos;elles
+              soient de son fait ou du fait de tiers partenaires. Les
+              informations présentes sur ce site sont données à titre indicatif
+              et peuvent évoluer à tout moment.
+            </p>
+
+            <h2>8. Données personnelles</h2>
+            <p>
+              Ce site vitrine ne collecte pas de données personnelles par des
+              formulaires actifs. Les données transmises volontairement via
+              Calendly (prise de rendez-vous) sont traitées conformément à notre{" "}
+              <a href="/confidentialite">politique de confidentialité</a>. Les
+              conditions de traitement des données dans le cadre de
+              l&apos;utilisation du Service ReplyForge sont détaillées dans les{" "}
+              <a href="/cgv">Conditions Générales de Vente</a>.
+            </p>
+
+            <h2>9. Cookies</h2>
+            <p>
+              Ce site vitrine n&apos;utilise pas de cookies de tracking,
+              publicitaires ou analytiques. Seuls des cookies techniques
+              strictement nécessaires au fonctionnement du site peuvent être
+              déposés. Aucun consentement préalable n&apos;est requis pour ces
+              cookies.
+            </p>
+
+            <h2>10. Droit applicable et juridiction</h2>
+            <p>
+              Les présentes mentions légales sont régies par le droit français.
+              En cas de litige relatif à l&apos;interprétation ou à
+              l&apos;exécution des présentes, et à défaut de résolution
+              amiable, les tribunaux français seront seuls compétents.
             </p>
           </Prose>
         </Container>

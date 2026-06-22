@@ -21,6 +21,7 @@ export const siteConfig = {
   ],
   legal: [
     { label: "Mentions légales", href: "/mentions-legales" },
+    { label: "CGV", href: "/cgv" },
     { label: "Confidentialité", href: "/confidentialite" },
   ],
 } as const;
