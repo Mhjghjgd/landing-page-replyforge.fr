@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { siteConfig } from "@/config/site";
 
 const inter = Inter({
@@ -107,9 +105,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Navbar />
-        <main className="flex flex-col flex-1 pt-16">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

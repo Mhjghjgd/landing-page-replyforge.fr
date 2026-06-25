@@ -62,7 +62,13 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-2">
+          <Button href="/connexion" size="sm" variant="ghost">
+            Se connecter
+          </Button>
+          <Button href="/inscription" size="sm" variant="outline">
+            S'inscrire
+          </Button>
           <Button href="/contact" size="sm">
             Prendre RDV
           </Button>
@@ -102,7 +108,13 @@ export function Navbar() {
                   {item.label}
                 </Link>
               ))}
-              <div className="mt-3 pt-3 border-t border-[var(--color-border)]/60">
+              <div className="mt-3 pt-3 border-t border-[var(--color-border)]/60 flex flex-col gap-2">
+                <Button href="/connexion" size="md" variant="ghost" className="w-full justify-center">
+                  Se connecter
+                </Button>
+                <Button href="/inscription" size="md" variant="outline" className="w-full justify-center">
+                  S'inscrire
+                </Button>
                 <Button href="/contact" size="md" className="w-full">
                   Prendre RDV
                 </Button>

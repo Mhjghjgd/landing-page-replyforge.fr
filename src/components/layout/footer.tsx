@@ -8,7 +8,7 @@ export function Footer() {
       <div className="absolute inset-x-0 top-0 gold-divider" aria-hidden />
       <div className="mx-auto w-full max-w-7xl px-6 sm:px-8 py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-4">
             <Logo />
             <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-[var(--color-pearl-400)]">
               {siteConfig.description}
@@ -24,7 +24,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 lg:col-span-7">
+          <div className="grid grid-cols-3 gap-8 lg:col-span-8">
             <FooterCol title="Navigation">
               {siteConfig.nav.map((n) => (
                 <FooterLink key={n.href} href={n.href}>
@@ -39,6 +39,11 @@ export function Footer() {
                 </FooterLink>
               ))}
             </FooterCol>
+            <FooterCol title="Espace client">
+              <FooterLink href="/connexion">Se connecter</FooterLink>
+              <FooterLink href="/inscription">S'inscrire</FooterLink>
+              <FooterLink href="/dashboard">Mon dashboard</FooterLink>
+            </FooterCol>
           </div>
         </div>
 
@@ -46,9 +51,17 @@ export function Footer() {
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-pearl-500)]">
             © {new Date().getFullYear()} ReplyForge — Tous droits réservés
           </p>
-          <p className="text-xs text-[var(--color-pearl-500)]">
-            Forgé avec attention à Paris.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-[var(--color-pearl-500)]">
+              Forgé avec attention à Paris.
+            </p>
+            <Link
+              href="/admin"
+              className="text-xs text-[var(--color-pearl-500)]/40 hover:text-[var(--color-pearl-500)] transition-colors"
+            >
+              Accès admin
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
