@@ -38,16 +38,42 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.user_id;
         if (!userId) break;
 
-        await supabase
+        const fullName = session.metadata?.full_name ?? "";
+        const hotelName = session.metadata?.hotel_name ?? "";
+        const customerEmail = session.customer_email ?? session.customer_details?.email ?? "";
+
+        // Upsert profile — handles the case where the trigger didn't fire
+        const { data: existing } = await supabase
           .from("profiles")
-          .update({
+          .select("id")
+          .eq("id", userId)
+          .maybeSingle();
+
+        if (!existing) {
+          await supabase.from("profiles").insert({
+            id: userId,
+            email: customerEmail,
+            full_name: fullName,
+            hotel_name: hotelName,
+            role: "hotel",
             subscription_status: "active",
             stripe_customer_id: session.customer as string,
             stripe_subscription_id: session.subscription as string,
-          })
-          .eq("id", userId);
-
-        console.log("[Webhook] checkout.session.completed — user", userId, "→ active");
+          });
+          // Create default tone profile
+          await supabase.from("tone_profiles").insert({ user_id: userId });
+          console.log("[Webhook] checkout.session.completed — profile CREATED for user", userId);
+        } else {
+          await supabase
+            .from("profiles")
+            .update({
+              subscription_status: "active",
+              stripe_customer_id: session.customer as string,
+              stripe_subscription_id: session.subscription as string,
+            })
+            .eq("id", userId);
+          console.log("[Webhook] checkout.session.completed — profile UPDATED for user", userId, "→ active");
+        }
         break;
       }
 
