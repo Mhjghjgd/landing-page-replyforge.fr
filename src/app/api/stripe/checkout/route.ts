@@ -14,7 +14,7 @@ export async function POST() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("subscription_status, stripe_customer_id, full_name, hotel_name, email")
+    .select("subscription_status, stripe_customer_id, email")
     .eq("id", user.id)
     .single();
 
@@ -33,13 +33,11 @@ export async function POST() {
         quantity: 1,
       },
     ],
-    customer_email: profile?.stripe_customer_id ? undefined : (user.email ?? undefined),
+    customer_email: profile?.stripe_customer_id ? undefined : user.email!,
     customer: profile?.stripe_customer_id ?? undefined,
     allow_promotion_codes: true,
     metadata: {
       user_id: user.id,
-      full_name: profile?.full_name ?? "",
-      hotel_name: profile?.hotel_name ?? "",
     },
     subscription_data: {
       metadata: {

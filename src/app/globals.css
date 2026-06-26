@@ -37,12 +37,6 @@
   --color-accent: var(--color-gold-400);
   --color-accent-hover: var(--color-gold-300);
 
-  /* === TYPOGRAPHIE === */
-  --font-display: var(--font-playfair), Georgia, serif;
-  --font-serif: var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
-
   /* === APP DASHBOARD — aliases Tailwind v4 === */
   --color-replyforge-bg: #080C14;
   --color-replyforge-bg-elevated: #0F1624;
@@ -52,6 +46,12 @@
   --color-replyforge-text: #F2EFEA;
   --color-replyforge-text-muted: #8B9AAE;
   --color-replyforge-border: #1C2537;
+
+  /* === TYPOGRAPHIE === */
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
+  --font-serif: var(--font-playfair), Georgia, serif;
 
   /* === RAYONS === */
   --radius-sm: 0.375rem;
