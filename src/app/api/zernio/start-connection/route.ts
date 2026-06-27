@@ -27,7 +27,7 @@ export async function POST(_req: NextRequest) {
 
   const service = createServiceClient();
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "https://www.replyforge.fr").replace(/\/$/, "");
-  const redirectUrl = `${baseUrl}/onboarding/google?step=finalize`;
+  const redirectUrl = `${baseUrl}/api/zernio/oauth-callback`;
 
   // If already connected with an account, return alreadyConnected
   const { data: existing } = await service
@@ -47,7 +47,7 @@ export async function POST(_req: NextRequest) {
       // Stale row — profile may have been deleted in Zernio dashboard.
       // Try to reuse it; if Zernio returns 4xx, wipe and recreate.
       try {
-        const { authUrl } = await zernio.getOAuthUrl(existing.zernio_profile_id, redirectUrl);
+        const { authUrl } = await zernio.getGoogleBusinessConnectUrl(existing.zernio_profile_id, redirectUrl);
         return NextResponse.json({ authUrl });
       } catch (reuseErr) {
         const isStale =
@@ -68,8 +68,8 @@ export async function POST(_req: NextRequest) {
     );
     profileId = zernioProfile._id;
 
-    // 2. Get OAuth URL (with redirect back to ReplyForge)
-    const { authUrl } = await zernio.getOAuthUrl(profileId, redirectUrl);
+    // 2. Get OAuth URL (headless mode, redirect to our callback)
+    const { authUrl } = await zernio.getGoogleBusinessConnectUrl(profileId, redirectUrl);
 
     // 3. Upsert connection (account_id empty until OAuth completes)
     await service.from("zernio_connections").upsert(

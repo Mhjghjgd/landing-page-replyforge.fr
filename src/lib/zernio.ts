@@ -75,6 +75,14 @@ export interface ZernioReview {
   reply: { comment: string; updateTime?: string } | null;
 }
 
+export interface ZernioConnectLocation {
+  id: string;
+  name: string;
+  address?: string;
+  city?: string;
+  locationId?: string;
+}
+
 // ─── API functions ────────────────────────────────────────────────────────────
 
 export const zernio = {
@@ -84,17 +92,23 @@ export const zernio = {
       body: JSON.stringify({ name }),
     }),
 
-  // redirect_url param name inferred from Zernio error "Invalid redirect_url format"
-  // Variant 1 (default): /connect/googlebusiness?profileId=...&redirect_url=...
-  // Variant 2 (fallback): /connect/google-business?profileId=...
-  // Variant 3 (fallback): /connect/get-url?platform=googlebusiness&profileId=...
-  getOAuthUrl: (profileId: string, redirectUrl?: string) => {
-    const params = new URLSearchParams({ profileId });
-    if (redirectUrl) params.append("redirect_url", redirectUrl); // URLSearchParams encodes automatically
-    return zernioFetch<{ authUrl: string }>(
-      `/connect/googlebusiness?${params.toString()}`
-    );
+  getGoogleBusinessConnectUrl: (profileId: string, redirectUrl: string, headless = true) => {
+    const encodedRedirect = encodeURIComponent(redirectUrl);
+    const path = `/connect/googlebusiness?profileId=${profileId}&headless=${headless}&redirect_url=${encodedRedirect}`;
+    return zernioFetch<{ authUrl: string }>(path);
   },
+
+  listConnectLocations: (connectToken: string) =>
+    zernioFetch<{ locations: ZernioConnectLocation[] }>(
+      "/connect/googlebusiness/locations",
+      { headers: { "X-Connect-Token": connectToken } }
+    ),
+
+  selectConnectLocation: (connectToken: string, locationId: string) =>
+    zernioFetch<{ account: { _id: string; name?: string; address?: string; city?: string } }>(
+      "/connect/googlebusiness/select-location",
+      { method: "POST", headers: { "X-Connect-Token": connectToken }, body: JSON.stringify({ locationId }) }
+    ),
 
   listAccounts: (profileId: string) =>
     zernioFetch<{ accounts: ZernioAccount[] }>(

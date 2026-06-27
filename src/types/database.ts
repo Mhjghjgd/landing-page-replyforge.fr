@@ -45,6 +45,8 @@ export interface ZernioConnection {
   last_sync_at: string | null;
   sync_status: SyncStatus;
   sync_error: string | null;
+  connect_token: string | null;
+  connect_token_expires_at: string | null;
 }
 
 export type GoogleConnection = ZernioConnection;
