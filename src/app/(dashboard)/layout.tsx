@@ -11,11 +11,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (!user) redirect("/connexion");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("hotel_name, full_name, email, role, subscription_status")
-    .eq("id", user.id)
-    .single();
+  const [{ data: profile }, { count: unrepliedCount }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("hotel_name, full_name, email, role, subscription_status")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("reviews")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .is("reply_text", null),
+  ]);
 
   if (profile?.subscription_status !== "active") redirect("/paiement-requis");
 
@@ -28,6 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         fullName={profile?.full_name ?? ""}
         email={user.email ?? ""}
         isAdmin={isAdmin}
+        unrepliedCount={unrepliedCount ?? 0}
       />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">

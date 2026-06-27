@@ -3,6 +3,8 @@ export type UserRole = "hotel" | "admin";
 export type ResponseStatus = "pending" | "published" | "failed";
 export type CatchupJobStatus = "pending" | "processing" | "completed" | "failed";
 export type ResponseLength = "short" | "medium" | "long";
+export type SyncStatus = "idle" | "syncing" | "error";
+export type ReplyState = "PENDING" | "ACTIVE" | "REJECTED";
 
 export interface Profile {
   id: string;
@@ -29,26 +31,40 @@ export interface ToneProfile {
   updated_at: string;
 }
 
-export interface GoogleConnection {
+export interface ZernioConnection {
   id: string;
   user_id: string;
-  gmbapi_location_id: string;
+  zernio_profile_id: string;
+  zernio_account_id: string | null;
   business_name: string | null;
   business_address: string | null;
+  business_city: string | null;
+  rating: number | null;
+  review_count: number;
   connected_at: string;
   last_sync_at: string | null;
+  sync_status: SyncStatus;
+  sync_error: string | null;
 }
+
+export type GoogleConnection = ZernioConnection;
 
 export interface Review {
   id: string;
   user_id: string;
-  gmbapi_review_id: string;
+  zernio_review_id: string;
   author_name: string | null;
+  author_photo_url: string | null;
   rating: number | null;
   review_text: string | null;
   review_language: string | null;
   review_created_at: string | null;
+  review_updated_at: string | null;
+  reply_text: string | null;
+  reply_published_at: string | null;
+  reply_state: ReplyState | null;
   imported_at: string;
+  updated_at: string;
 }
 
 export interface Response {

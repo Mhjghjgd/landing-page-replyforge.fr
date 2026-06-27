@@ -23,6 +23,7 @@ interface NavItem {
   href: string;
   icon: React.ReactNode;
   badge?: string;
+  showUnreplied?: boolean;
 }
 
 interface SidebarProps {
@@ -30,6 +31,7 @@ interface SidebarProps {
   fullName: string;
   email: string;
   isAdmin: boolean;
+  unrepliedCount?: number;
 }
 
 const navItems: NavItem[] = [
@@ -42,6 +44,7 @@ const navItems: NavItem[] = [
     label: "Avis & réponses",
     href: "/dashboard/avis",
     icon: <MessageSquare className="w-4 h-4" />,
+    showUnreplied: true,
   },
   {
     label: "Réglages de ton",
@@ -72,6 +75,7 @@ function SidebarContent({
   fullName,
   email,
   isAdmin,
+  unrepliedCount,
   onClose,
 }: SidebarProps & { pathname: string; onClose?: () => void }) {
   const initial = fullName?.[0]?.toUpperCase() ?? "?";
@@ -100,7 +104,10 @@ function SidebarContent({
           </span>
         </Link>
         {onClose && (
-          <button onClick={onClose} className="p-1 rounded-lg text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)] transition-colors md:hidden">
+          <button
+            onClick={onClose}
+            className="p-1 rounded-lg text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)] transition-colors md:hidden"
+          >
             <X className="w-4 h-4" />
           </button>
         )}
@@ -119,6 +126,7 @@ function SidebarContent({
             item.href === "/dashboard"
               ? pathname === "/dashboard"
               : pathname.startsWith(item.href);
+          const showBadge = item.showUnreplied && (unrepliedCount ?? 0) > 0;
 
           return (
             <Link
@@ -135,11 +143,23 @@ function SidebarContent({
               {isActive && (
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[var(--color-gold-400)] rounded-r-full" />
               )}
-              <span className={cn("transition-colors", isActive ? "text-[var(--color-gold-400)]" : "text-[var(--color-foreground-muted)] group-hover:text-[var(--color-gold-400)]")}>
+              <span
+                className={cn(
+                  "transition-colors",
+                  isActive
+                    ? "text-[var(--color-gold-400)]"
+                    : "text-[var(--color-foreground-muted)] group-hover:text-[var(--color-gold-400)]"
+                )}
+              >
                 {item.icon}
               </span>
               <span className="flex-1">{item.label}</span>
-              {item.badge && (
+              {showBadge && (
+                <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-orange-500/20 text-orange-400 text-[10px] font-bold">
+                  {(unrepliedCount ?? 0) > 99 ? "99+" : unrepliedCount}
+                </span>
+              )}
+              {item.badge && !showBadge && (
                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-[var(--color-gold-400)]/15 text-[var(--color-gold-400)] border border-[var(--color-gold-400)]/20">
                   {item.badge}
                 </span>
@@ -184,11 +204,10 @@ function SidebarContent({
   );
 }
 
-export function Sidebar({ hotelName, fullName, email, isAdmin }: SidebarProps) {
+export function Sidebar({ hotelName, fullName, email, isAdmin, unrepliedCount }: SidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Close on route change
   useEffect(() => setMobileOpen(false), [pathname]);
 
   return (
@@ -201,6 +220,7 @@ export function Sidebar({ hotelName, fullName, email, isAdmin }: SidebarProps) {
           fullName={fullName}
           email={email}
           isAdmin={isAdmin}
+          unrepliedCount={unrepliedCount}
         />
       </aside>
 
@@ -238,6 +258,7 @@ export function Sidebar({ hotelName, fullName, email, isAdmin }: SidebarProps) {
                 fullName={fullName}
                 email={email}
                 isAdmin={isAdmin}
+                unrepliedCount={unrepliedCount}
                 onClose={() => setMobileOpen(false)}
               />
             </motion.aside>
