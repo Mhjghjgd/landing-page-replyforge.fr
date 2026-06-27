@@ -31,14 +31,16 @@ async function zernioFetch<T>(path: string, init: RequestInit = {}): Promise<T> 
   }
 
   if (!res.ok) {
+    const bodyText = await res.text().catch(() => "");
+    console.error("[Zernio API error]", { status: res.status, url: `${BASE_URL}${path}`, body: bodyText });
     let code: string | null = null;
     let message = `Zernio HTTP ${res.status}`;
     try {
-      const body = await res.json();
+      const body = JSON.parse(bodyText);
       code = body.code ?? null;
-      message = body.message ?? message;
+      message = body.message ?? body.error ?? (bodyText || message);
     } catch {}
-    throw new ZernioError(res.status, code, message);
+    throw new ZernioError(res.status, code, `${message} (body: ${bodyText.slice(0, 200)})`);
   }
 
   return res.json() as Promise<T>;
@@ -82,10 +84,17 @@ export const zernio = {
       body: JSON.stringify({ name }),
     }),
 
-  getOAuthUrl: (profileId: string) =>
-    zernioFetch<{ authUrl: string }>(
-      `/connect/googlebusiness?profileId=${encodeURIComponent(profileId)}`
-    ),
+  // redirect_url param name inferred from Zernio error "Invalid redirect_url format"
+  // Variant 1 (default): /connect/googlebusiness?profileId=...&redirect_url=...
+  // Variant 2 (fallback): /connect/google-business?profileId=...
+  // Variant 3 (fallback): /connect/get-url?platform=googlebusiness&profileId=...
+  getOAuthUrl: (profileId: string, redirectUrl?: string) => {
+    const params = new URLSearchParams({ profileId });
+    if (redirectUrl) params.append("redirect_url", redirectUrl); // URLSearchParams encodes automatically
+    return zernioFetch<{ authUrl: string }>(
+      `/connect/googlebusiness?${params.toString()}`
+    );
+  },
 
   listAccounts: (profileId: string) =>
     zernioFetch<{ accounts: ZernioAccount[] }>(
