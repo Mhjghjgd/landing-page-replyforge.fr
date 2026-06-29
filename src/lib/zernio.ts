@@ -81,7 +81,7 @@ export interface ZernioConnectLocation {
   address?: string;
   city?: string;
   locationId?: string;
-  accountId?: string; // format "accounts/xxx"
+  accountId?: string;
 }
 
 // ─── API functions ────────────────────────────────────────────────────────────

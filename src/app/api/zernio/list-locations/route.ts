@@ -41,8 +41,8 @@ export async function GET(_req: NextRequest) {
   }
 
   try {
-    const { locations } = await zernio.listConnectLocations(connection.connect_token);
-    return NextResponse.json({ locations });
+    const pendingData = await zernio.listConnectLocations(connection.connect_token);
+    return NextResponse.json({ locations: pendingData.locations ?? [] });
   } catch (err) {
     if (err instanceof ZernioError) {
       console.error("[list-locations] ZernioError", {

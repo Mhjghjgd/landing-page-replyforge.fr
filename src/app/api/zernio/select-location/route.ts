@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     locationId = body.locationId;
-    accountId = body.accountId ?? "";
+    accountId = body.accountId;
     if (!locationId || typeof locationId !== "string") {
       return NextResponse.json({ error: "locationId requis" }, { status: 400 });
     }
@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
   try {
     const { account } = await zernio.selectConnectLocation(
       connection.connect_token,
-      connection.zernio_profile_id,
+      connection.zernio_profile_id ?? "",
       locationId,
-      accountId,
+      accountId ?? "",
       connection.pending_data_token ?? ""
     );
 
