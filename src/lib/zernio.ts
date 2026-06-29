@@ -81,6 +81,7 @@ export interface ZernioConnectLocation {
   address?: string;
   city?: string;
   locationId?: string;
+  accountId?: string; // format "accounts/xxx"
 }
 
 // ─── API functions ────────────────────────────────────────────────────────────
@@ -104,10 +105,20 @@ export const zernio = {
       { headers: { "X-Connect-Token": connectToken } }
     ),
 
-  selectConnectLocation: (connectToken: string, locationId: string) =>
+  selectConnectLocation: (
+    connectToken: string,
+    profileId: string,
+    locationId: string,
+    accountId: string,
+    pendingDataToken: string
+  ) =>
     zernioFetch<{ account: { _id: string; name?: string; address?: string; city?: string } }>(
       "/connect/googlebusiness/select-location",
-      { method: "POST", headers: { "X-Connect-Token": connectToken }, body: JSON.stringify({ locationId }) }
+      {
+        method: "POST",
+        headers: { "X-Connect-Token": connectToken },
+        body: JSON.stringify({ profileId, locationId, accountId, pendingDataToken }),
+      }
     ),
 
   listAccounts: (profileId: string) =>

@@ -16,9 +16,11 @@ export async function POST(req: NextRequest) {
   }
 
   let locationId: string;
+  let accountId: string;
   try {
     const body = await req.json();
     locationId = body.locationId;
+    accountId = body.accountId ?? "";
     if (!locationId || typeof locationId !== "string") {
       return NextResponse.json({ error: "locationId requis" }, { status: 400 });
     }
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
   const service = createServiceClient();
   const { data: connection } = await service
     .from("zernio_connections")
-    .select("connect_token, connect_token_expires_at")
+    .select("connect_token, connect_token_expires_at, zernio_profile_id, pending_data_token")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -52,7 +54,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { account } = await zernio.selectConnectLocation(connection.connect_token, locationId);
+    const { account } = await zernio.selectConnectLocation(
+      connection.connect_token,
+      connection.zernio_profile_id,
+      locationId,
+      accountId,
+      connection.pending_data_token ?? ""
+    );
 
     await service
       .from("zernio_connections")
@@ -64,6 +72,8 @@ export async function POST(req: NextRequest) {
         sync_status: "idle",
         connect_token: null,
         connect_token_expires_at: null,
+        temp_token: null,
+        pending_data_token: null,
       })
       .eq("user_id", user.id);
 

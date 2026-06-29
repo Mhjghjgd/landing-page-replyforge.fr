@@ -10,6 +10,7 @@ interface Location {
   address?: string;
   city?: string;
   locationId?: string;
+  accountId?: string;
 }
 
 export default function SelectLocationPage() {
@@ -43,14 +44,14 @@ export default function SelectLocationPage() {
     return () => { cancelled = true; };
   }, []);
 
-  async function handleSelect(locationId: string) {
+  async function handleSelect(locationId: string, accountId: string) {
     setSelecting(locationId);
     setError(null);
     try {
       const res = await fetch("/api/zernio/select-location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locationId }),
+        body: JSON.stringify({ locationId, accountId }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -148,7 +149,7 @@ export default function SelectLocationPage() {
               return (
                 <button
                   key={loc.id}
-                  onClick={() => handleSelect(loc.id)}
+                  onClick={() => handleSelect(loc.id, loc.accountId ?? "")}
                   disabled={isDisabled}
                   className="w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-left transition-all hover:border-[var(--color-gold-400)]/50 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
