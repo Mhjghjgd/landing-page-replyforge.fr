@@ -70,15 +70,39 @@ export async function POST(_req: NextRequest) {
         review_updated_at: r.updateTime ?? null,
         reply_text: r.reply?.comment ?? null,
         reply_published_at: r.reply?.updateTime ?? null,
-        reply_state: null,
         updated_at: new Date().toISOString(),
       }));
 
       const { error } = await service
         .from("reviews")
-        .upsert(rows, { onConflict: "zernio_review_id" });
+        .upsert(rows, { onConflict: "zernio_review_id", ignoreDuplicates: false });
 
       if (!error) synced = rows.length;
+    }
+
+    // Auto-generate AI replies for reviews without any reply or pending AI generation
+    const { data: reviewsToGenerate } = await service
+      .from("reviews")
+      .select("id")
+      .eq("user_id", user.id)
+      .is("reply_text", null)
+      .is("ai_generated_reply", null);
+
+    if (reviewsToGenerate && reviewsToGenerate.length > 0) {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://replyforge.fr";
+      console.log(`[sync] Triggering AI generation for ${reviewsToGenerate.length} reviews`);
+      Promise.all(
+        reviewsToGenerate.map((r) =>
+          fetch(`${appUrl}/api/ai/generate-reply-internal`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-internal-key": process.env.INTERNAL_API_KEY ?? "",
+            },
+            body: JSON.stringify({ reviewId: r.id, userId: user.id }),
+          }).catch((e) => console.error("[sync] AI gen failed for review", r.id, e))
+        )
+      ).catch(() => {});
     }
 
     const avgRating =
