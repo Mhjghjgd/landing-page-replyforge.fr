@@ -131,7 +131,17 @@ export const zernio = {
     (() => {
       const body = { profileId, locationId, accountId, pendingDataToken };
       console.log("[selectConnectLocation] BODY sent to Zernio:", JSON.stringify(body));
-      return zernioFetch<{ account: { _id: string; name?: string; address?: string; city?: string } }>(
+      return zernioFetch<{
+        account: {
+          accountId: string;
+          platform: string;
+          username: string;
+          displayName: string;
+          isActive: boolean;
+          selectedLocationName: string;
+          selectedLocationId: string;
+        }
+      }>(
         "/connect/googlebusiness/select-location",
         {
           method: "POST",
@@ -146,14 +156,28 @@ export const zernio = {
       `/accounts?profileId=${encodeURIComponent(profileId)}`
     ),
 
-  getReviews: (accountId: string) =>
-    zernioFetch<{ reviews: ZernioReview[] }>(
-      `/accounts/${encodeURIComponent(accountId)}/google-business-reviews`
-    ),
+  getReviews: async (accountId: string) => {
+    const path = `/inbox/reviews?accountId=${encodeURIComponent(accountId)}`;
+    console.log("[getReviews] Calling:", path);
+    const raw = await zernioFetch<unknown>(path);
+    console.log("[getReviews] RAW response keys:", raw && typeof raw === "object" ? Object.keys(raw as object) : typeof raw);
+    console.log("[getReviews] RAW response (first 500 chars):", JSON.stringify(raw).slice(0, 500));
+
+    const r = raw as Record<string, unknown>;
+    const reviews = (r.reviews ?? r.data ?? r.items ?? r.results ?? []) as ZernioReview[];
+
+    if (!Array.isArray(reviews)) {
+      console.error("[getReviews] Could not extract array from response. Returning empty.");
+      return { reviews: [] as ZernioReview[] };
+    }
+
+    console.log("[getReviews] Extracted", reviews.length, "reviews");
+    return { reviews };
+  },
 
   replyToReview: (accountId: string, reviewId: string, comment: string) =>
     zernioFetch<{ success: boolean }>(
-      `/accounts/${encodeURIComponent(accountId)}/google-business-reviews/${encodeURIComponent(reviewId)}/reply`,
-      { method: "POST", body: JSON.stringify({ comment }) }
+      `/inbox/review-reply/${encodeURIComponent(reviewId)}`,
+      { method: "POST", body: JSON.stringify({ comment, accountId }) }
     ),
 };

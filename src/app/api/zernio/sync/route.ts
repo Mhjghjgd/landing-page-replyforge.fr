@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { zernio, ZernioError } from "@/lib/zernio";
+import { zernio, ZernioError, type ZernioReview } from "@/lib/zernio";
 
 export const runtime = "nodejs";
 
@@ -46,7 +46,15 @@ export async function POST(_req: NextRequest) {
     .eq("user_id", user.id);
 
   try {
-    const { reviews } = await zernio.getReviews(connection.zernio_account_id);
+    let reviews: ZernioReview[] = [];
+    try {
+      const result = await zernio.getReviews(connection.zernio_account_id);
+      reviews = result.reviews ?? [];
+    } catch (err) {
+      console.error("[sync] getReviews failed:", err);
+      reviews = [];
+    }
+    console.log("[sync] Processing", reviews.length, "reviews");
 
     let synced = 0;
     if (reviews.length > 0) {

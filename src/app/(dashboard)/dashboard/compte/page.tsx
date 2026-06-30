@@ -15,6 +15,12 @@ export default async function ComptePage() {
     .eq("id", user!.id)
     .single();
 
+  const { data: zernioConnection } = await supabase
+    .from("zernio_connections")
+    .select("business_name, zernio_account_id")
+    .eq("user_id", user!.id)
+    .maybeSingle();
+
   return (
     <div className="max-w-2xl space-y-8">
       <div>
@@ -34,6 +40,8 @@ export default async function ComptePage() {
         stripeCustomerId={profile?.stripe_customer_id ?? null}
         subscriptionStatus={profile?.subscription_status ?? ""}
         periodEnd={profile?.subscription_current_period_end ?? null}
+        googleBusinessName={zernioConnection?.business_name ?? null}
+        googleAccountId={zernioConnection?.zernio_account_id ?? null}
       />
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
-import { Loader2, ExternalLink, AlertTriangle } from "lucide-react";
+import { Loader2, ExternalLink, AlertTriangle, MapPin } from "lucide-react";
 
 interface Props {
   userId: string;
@@ -12,6 +12,8 @@ interface Props {
   stripeCustomerId: string | null;
   subscriptionStatus: string;
   periodEnd: string | null;
+  googleBusinessName: string | null;
+  googleAccountId: string | null;
 }
 
 export function AccountForm({
@@ -22,6 +24,8 @@ export function AccountForm({
   stripeCustomerId,
   subscriptionStatus,
   periodEnd,
+  googleBusinessName,
+  googleAccountId,
 }: Props) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,6 +40,9 @@ export function AccountForm({
 
   const [portalLoading, setPortalLoading] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
+
+  const [disconnecting, setDisconnecting] = useState(false);
+  const [disconnectError, setDisconnectError] = useState<string | null>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState("");
@@ -93,6 +100,23 @@ export function AccountForm({
     } catch (err) {
       setDeleteError(err instanceof Error ? err.message : "Erreur inconnue");
       setDeleting(false);
+    }
+  };
+
+  const disconnectGoogleBusiness = async () => {
+    setDisconnecting(true);
+    setDisconnectError(null);
+
+    try {
+      const res = await fetch("/api/zernio/disconnect", { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Erreur lors de la déconnexion");
+      }
+      window.location.reload();
+    } catch (err) {
+      setDisconnectError(err instanceof Error ? err.message : "Erreur inconnue");
+      setDisconnecting(false);
     }
   };
 
@@ -218,6 +242,58 @@ export function AccountForm({
             Factures, changement de carte, résiliation — géré via le portail Stripe.
           </p>
         </div>
+      </div>
+
+      {/* Google Business connection */}
+      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+        <h2 className="text-[15px] font-semibold text-[var(--color-foreground)] mb-5">
+          Fiche Google connectée
+        </h2>
+
+        {googleAccountId ? (
+          <>
+            <div className="flex items-center justify-between py-3 border-b border-[var(--color-border)]/50">
+              <div className="flex items-center gap-2.5">
+                <MapPin className="w-4 h-4 text-[var(--color-foreground-muted)]" />
+                <span className="text-[13px] text-[var(--color-foreground)] font-medium">
+                  {googleBusinessName ?? "Établissement connecté"}
+                </span>
+              </div>
+              <span className="inline-flex items-center gap-1.5 text-[12px] font-medium px-2.5 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                Connectée
+              </span>
+            </div>
+
+            {disconnectError && (
+              <p className="mt-4 text-[12px] text-red-400">{disconnectError}</p>
+            )}
+
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={disconnectGoogleBusiness}
+                disabled={disconnecting}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-red-400 text-[13px] font-medium hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {disconnecting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                Déconnecter la fiche Google
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-[13px] text-[var(--color-foreground-muted)] mb-5 leading-relaxed">
+              Aucune fiche connectée. Connectez votre fiche Google pour synchroniser vos avis.
+            </p>
+            <a
+              href="/onboarding/google"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--color-gold-400)] text-[var(--color-ink-950)] text-[13px] font-semibold hover:bg-[var(--color-gold-300)] transition-colors"
+            >
+              Connecter ma fiche Google
+            </a>
+          </>
+        )}
       </div>
 
       {/* Danger zone */}

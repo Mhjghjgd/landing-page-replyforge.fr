@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { zernio, ZernioError } from "@/lib/zernio";
+import { zernio, ZernioError, type ZernioReview } from "@/lib/zernio";
 
 export const runtime = "nodejs";
 
@@ -74,13 +74,15 @@ export async function POST(req: NextRequest) {
       connection.pending_data_token ?? ""
     );
 
+    console.log("[select-location] Zernio account response:", JSON.stringify(account));
+
     await service
       .from("zernio_connections")
       .update({
-        zernio_account_id: account._id,
-        business_name: account.name ?? null,
-        business_address: account.address ?? null,
-        business_city: account.city ?? null,
+        zernio_account_id: account.accountId,
+        business_name: account.selectedLocationName ?? account.displayName ?? null,
+        business_address: null,
+        business_city: null,
         sync_status: "idle",
         connect_token: null,
         connect_token_expires_at: null,
@@ -89,9 +91,12 @@ export async function POST(req: NextRequest) {
       })
       .eq("user_id", user.id);
 
-    await syncReviews(user.id, account._id, service);
+    await syncReviews(user.id, account.accountId, service);
 
-    return NextResponse.json({ success: true, business_name: account.name ?? null });
+    return NextResponse.json({
+      success: true,
+      business_name: account.selectedLocationName ?? account.displayName ?? null
+    });
   } catch (err) {
     if (err instanceof ZernioError) {
       console.error("[select-location] ZernioError", {
@@ -124,7 +129,15 @@ async function syncReviews(
     .eq("user_id", userId);
 
   try {
-    const { reviews } = await zernio.getReviews(accountId);
+    let reviews: ZernioReview[] = [];
+    try {
+      const result = await zernio.getReviews(accountId);
+      reviews = result.reviews ?? [];
+    } catch (err) {
+      console.error("[sync] getReviews failed:", err);
+      reviews = [];
+    }
+    console.log("[sync] Processing", reviews.length, "reviews");
 
     if (reviews.length > 0) {
       const rows = reviews.map((r) => ({
