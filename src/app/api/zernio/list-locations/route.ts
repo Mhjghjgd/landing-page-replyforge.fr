@@ -18,7 +18,7 @@ export async function GET(_req: NextRequest) {
   const service = createServiceClient();
   const { data: connection } = await service
     .from("zernio_connections")
-    .select("connect_token, connect_token_expires_at")
+    .select("connect_token, connect_token_expires_at, pending_data_token, zernio_profile_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -41,8 +41,12 @@ export async function GET(_req: NextRequest) {
   }
 
   try {
-    const pendingData = await zernio.listConnectLocations(connection.connect_token);
-    return NextResponse.json({ locations: pendingData.locations ?? [] });
+    const { locations } = await zernio.listConnectLocations(
+      connection.connect_token,
+      connection.pending_data_token ?? undefined,
+      connection.zernio_profile_id ?? undefined
+    );
+    return NextResponse.json({ locations: locations ?? [] });
   } catch (err) {
     if (err instanceof ZernioError) {
       console.error("[list-locations] ZernioError", {

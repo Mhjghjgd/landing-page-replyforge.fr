@@ -15,7 +15,11 @@ async function zernioFetch<T>(path: string, init: RequestInit = {}): Promise<T> 
   const apiKey = process.env.ZERNIO_API_KEY;
   if (!apiKey) throw new ZernioError(500, null, "ZERNIO_API_KEY is not configured");
 
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const finalUrl = `${BASE_URL}${path}`;
+  console.log("[zernioFetch] FINAL URL SENT:", finalUrl);
+  console.log("[zernioFetch] METHOD:", init.method ?? "GET");
+  console.log("[zernioFetch] X-Connect-Token:", (init.headers as Record<string, string>)?.["X-Connect-Token"] ?? "none");
+  const res = await fetch(finalUrl, {
     ...init,
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -99,11 +103,23 @@ export const zernio = {
     return zernioFetch<{ authUrl: string }>(path);
   },
 
-  listConnectLocations: (connectToken: string) =>
-    zernioFetch<{ locations: ZernioConnectLocation[] }>(
-      "/connect/googlebusiness/locations",
+  listConnectLocations: (
+    connectToken: string,
+    pendingDataToken?: string,
+    profileId?: string
+  ) => {
+    const params = new URLSearchParams();
+    if (pendingDataToken) params.set("pendingDataToken", pendingDataToken);
+    if (profileId) params.set("profileId", profileId);
+    const queryString = params.toString();
+    const path = queryString
+      ? `/connect/googlebusiness/locations?${queryString}`
+      : "/connect/googlebusiness/locations";
+    return zernioFetch<{ locations: ZernioConnectLocation[] }>(
+      path,
       { headers: { "X-Connect-Token": connectToken } }
-    ),
+    );
+  },
 
   selectConnectLocation: (
     connectToken: string,
