@@ -46,6 +46,13 @@ export async function GET(_req: NextRequest) {
       connection.pending_data_token ?? undefined,
       connection.zernio_profile_id ?? undefined
     );
+    console.log("[list-locations] RAW Zernio response - locations count:", locations?.length ?? 0);
+    console.log("[list-locations] RAW Zernio response - full JSON:", JSON.stringify(locations, null, 2));
+    if (locations?.[0]) {
+      console.log("[list-locations] First location keys:", Object.keys(locations[0]));
+      console.log("[list-locations] First location.id value:", JSON.stringify(locations[0].id));
+      console.log("[list-locations] First location.accountId value:", JSON.stringify((locations[0] as any).accountId));
+    }
     return NextResponse.json({ locations: locations ?? [] });
   } catch (err) {
     if (err instanceof ZernioError) {

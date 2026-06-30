@@ -54,6 +54,18 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    console.log("[select-location] About to send to Zernio:", {
+      locationId,
+      locationIdType: typeof locationId,
+      locationIdLength: locationId?.length,
+      locationIdStartsWithLocations: locationId?.startsWith?.("locations/"),
+      accountId,
+      accountIdEmpty: !accountId || accountId === "",
+      accountIdStartsWithAccounts: accountId?.startsWith?.("accounts/"),
+      profileId: connection.zernio_profile_id,
+      pendingDataTokenPresent: !!connection.pending_data_token,
+      pendingDataTokenLength: connection.pending_data_token?.length,
+    });
     const { account } = await zernio.selectConnectLocation(
       connection.connect_token,
       connection.zernio_profile_id ?? "",

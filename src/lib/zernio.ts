@@ -128,14 +128,18 @@ export const zernio = {
     accountId: string,
     pendingDataToken: string
   ) =>
-    zernioFetch<{ account: { _id: string; name?: string; address?: string; city?: string } }>(
-      "/connect/googlebusiness/select-location",
-      {
-        method: "POST",
-        headers: { "X-Connect-Token": connectToken },
-        body: JSON.stringify({ profileId, locationId, accountId, pendingDataToken }),
-      }
-    ),
+    (() => {
+      const body = { profileId, locationId, accountId, pendingDataToken };
+      console.log("[selectConnectLocation] BODY sent to Zernio:", JSON.stringify(body));
+      return zernioFetch<{ account: { _id: string; name?: string; address?: string; city?: string } }>(
+        "/connect/googlebusiness/select-location",
+        {
+          method: "POST",
+          headers: { "X-Connect-Token": connectToken },
+          body: JSON.stringify(body),
+        }
+      );
+    })(),
 
   listAccounts: (profileId: string) =>
     zernioFetch<{ accounts: ZernioAccount[] }>(
