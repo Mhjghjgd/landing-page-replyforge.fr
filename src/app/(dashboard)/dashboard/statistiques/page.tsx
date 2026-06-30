@@ -1,8 +1,9 @@
+import { createClient } from "@/lib/supabase/server";
 import { BarChart3, TrendingUp, Star, MessageSquare, Clock, ThumbsUp, Globe } from "lucide-react";
 
 export const metadata = { title: "Statistiques — ReplyForge" };
 
-const upcomingFeatures = [
+const features = [
   {
     icon: TrendingUp,
     title: "Évolution de la note",
@@ -54,7 +55,20 @@ const upcomingFeatures = [
   },
 ];
 
-export default function StatistiquesPage() {
+export default async function StatistiquesPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: connection } = await supabase
+    .from("zernio_connections")
+    .select("zernio_account_id")
+    .eq("user_id", user!.id)
+    .maybeSingle();
+
+  const isGoogleConnected = !!connection?.zernio_account_id;
+
   return (
     <div className="max-w-5xl space-y-8">
       <div>
@@ -66,29 +80,33 @@ export default function StatistiquesPage() {
         </p>
       </div>
 
-      {/* Coming soon banner */}
+      {/* Banner */}
       <div className="flex items-start gap-4 rounded-2xl border border-[var(--color-gold-400)]/25 bg-[var(--color-gold-400)]/5 p-5">
         <div className="w-9 h-9 rounded-xl bg-[var(--color-gold-400)]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
           <BarChart3 className="w-4 h-4 text-[var(--color-gold-400)]" />
         </div>
         <div>
           <p className="text-[14px] font-semibold text-[var(--color-foreground)] mb-1">
-            Module statistiques en cours de développement
+            {isGoogleConnected
+              ? "Vos statistiques s'enrichiront avec le temps"
+              : "Module statistiques en cours de développement"}
           </p>
           <p className="text-[13px] text-[var(--color-foreground-muted)] leading-relaxed">
-            Ces tableaux de bord seront disponibles dès la connexion de votre fiche Google My Business. Voici un aperçu de ce qui vous attend.
+            {isGoogleConnected
+              ? "Ces tableaux de bord seront disponibles dans une prochaine version. Vos avis sont déjà collectés."
+              : "Ces tableaux de bord seront disponibles dès la connexion de votre fiche Google My Business. Voici un aperçu de ce qui vous attend."}
           </p>
         </div>
       </div>
 
       {/* Feature grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {upcomingFeatures.map((feature) => {
+        {features.map((feature) => {
           const Icon = feature.icon;
           return (
             <div
               key={feature.title}
-              className="relative rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 opacity-60"
+              className={`relative rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 ${isGoogleConnected ? "" : "opacity-60"}`}
             >
               <div className={`w-10 h-10 rounded-xl ${feature.bg} flex items-center justify-center mb-4`}>
                 <Icon className={`w-5 h-5 ${feature.color}`} />
@@ -99,7 +117,6 @@ export default function StatistiquesPage() {
               <p className="text-[12px] text-[var(--color-foreground-muted)] leading-relaxed">
                 {feature.description}
               </p>
-              {/* Lock overlay chip */}
               <div className="absolute top-4 right-4 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--color-surface-elevated)] text-[var(--color-foreground-muted)] border border-[var(--color-border)]">
                 Bientôt
               </div>

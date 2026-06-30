@@ -60,7 +60,11 @@ export default async function DashboardPage() {
       color: "text-[var(--color-gold-400)]",
       bg: "bg-[var(--color-gold-400)]/10",
       value: avgRating ? `${avgRating}` : null,
-      sub: avgRating ? `Sur ${totalReviews} avis` : "Connectez votre fiche Google",
+      sub: avgRating
+        ? `Sur ${totalReviews} avis`
+        : hasGoogle
+          ? "Aucun avis pour l'instant"
+          : "Connectez votre fiche Google",
     },
     {
       label: "Avis ce mois",
@@ -79,7 +83,9 @@ export default async function DashboardPage() {
       sub:
         tauxReponse !== null
           ? `${repliedCount} / ${totalReviews} avis`
-          : "Connectez votre fiche Google",
+          : hasGoogle
+            ? "Aucun avis pour l'instant"
+            : "Connectez votre fiche Google",
     },
     {
       label: "Temps moyen",
@@ -224,7 +230,9 @@ export default async function DashboardPage() {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center bg-[var(--color-surface)]/80 backdrop-blur-sm rounded-xl px-6 py-4 border border-[var(--color-border)]">
               <p className="text-[13px] text-[var(--color-foreground-muted)]">
-                Disponible après la connexion de votre fiche Google
+                {hasGoogle
+                  ? "Bientôt disponible"
+                  : "Disponible après la connexion de votre fiche Google"}
               </p>
             </div>
           </div>
