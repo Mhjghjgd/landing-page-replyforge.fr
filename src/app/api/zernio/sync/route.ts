@@ -58,51 +58,42 @@ export async function POST(_req: NextRequest) {
 
     let synced = 0;
     if (reviews.length > 0) {
-      const rows = reviews.map((r) => ({
+      const rows = reviews.map((r: any) => ({
         user_id: user.id,
-        zernio_review_id: r.id,
-        author_name: r.author?.name ?? null,
-        author_photo_url: r.author?.photoUrl ?? null,
-        rating: r.rating ?? null,
-        review_text: r.comment ?? null,
-        review_language: r.language ?? null,
-        review_created_at: r.createTime ?? null,
-        review_updated_at: r.updateTime ?? null,
-        reply_text: r.reply?.comment ?? null,
-        reply_published_at: r.reply?.updateTime ?? null,
+        zernio_review_id: r.id ?? r._id ?? r.reviewId,
+        author_name:
+          r.author?.name ??
+          r.author?.displayName ??
+          r.reviewer?.name ??
+          r.reviewer?.displayName ??
+          r.authorName ??
+          null,
+        author_photo_url:
+          r.author?.photoUrl ??
+          r.author?.picture ??
+          r.reviewer?.profilePhotoUrl ??
+          null,
+        rating: r.rating ?? r.starRating ?? r.stars ?? null,
+        review_text: r.comment ?? r.text ?? r.content ?? r.body ?? r.message ?? null,
+        review_language: r.language ?? r.locale ?? null,
+        review_created_at: r.createTime ?? r.createdAt ?? r.created_at ?? null,
+        review_updated_at: r.updateTime ?? r.updatedAt ?? null,
+        reply_text: r.reply?.comment ?? r.reply?.text ?? null,
+        reply_published_at: r.reply?.updateTime ?? r.reply?.updatedAt ?? null,
+        reply_state: null,
         updated_at: new Date().toISOString(),
       }));
 
+      // Log mapping for diagnostic
+      if (rows.length > 0) {
+        console.log("[sync] First mapped row:", JSON.stringify(rows[0], null, 2));
+      }
+
       const { error } = await service
         .from("reviews")
-        .upsert(rows, { onConflict: "zernio_review_id", ignoreDuplicates: false });
+        .upsert(rows, { onConflict: "zernio_review_id" });
 
       if (!error) synced = rows.length;
-    }
-
-    // Auto-generate AI replies for reviews without any reply or pending AI generation
-    const { data: reviewsToGenerate } = await service
-      .from("reviews")
-      .select("id")
-      .eq("user_id", user.id)
-      .is("reply_text", null)
-      .is("ai_generated_reply", null);
-
-    if (reviewsToGenerate && reviewsToGenerate.length > 0) {
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://replyforge.fr";
-      console.log(`[sync] Triggering AI generation for ${reviewsToGenerate.length} reviews`);
-      Promise.all(
-        reviewsToGenerate.map((r) =>
-          fetch(`${appUrl}/api/ai/generate-reply-internal`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-internal-key": process.env.INTERNAL_API_KEY ?? "",
-            },
-            body: JSON.stringify({ reviewId: r.id, userId: user.id }),
-          }).catch((e) => console.error("[sync] AI gen failed for review", r.id, e))
-        )
-      ).catch(() => {});
     }
 
     const avgRating =

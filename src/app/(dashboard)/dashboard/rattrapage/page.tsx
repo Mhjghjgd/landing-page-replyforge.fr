@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { Zap, CheckCircle2 } from "lucide-react";
-import { CatchupCheckoutButton } from "@/components/dashboard/CatchupCheckoutButton";
+import { Zap, CheckCircle2, ArrowRight } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export const metadata = { title: "Rattrapage express — ReplyForge" };
 
@@ -80,7 +80,13 @@ export default async function RattrapagePage() {
               </p>
 
               {isGoogleConnected ? (
-                <CatchupCheckoutButton />
+                <a
+                  href={`mailto:${siteConfig.email}?subject=Rattrapage express ReplyForge&body=Bonjour,%0A%0AJe souhaite commander le service Rattrapage express.%0A%0AMerci.`}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[var(--color-gold-400)] text-[var(--color-ink-950)] font-semibold text-[14px] hover:bg-[var(--color-gold-300)] transition-colors"
+                >
+                  Commander
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               ) : (
                 <>
                   <button
@@ -88,6 +94,7 @@ export default async function RattrapagePage() {
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[var(--color-gold-400)] text-[var(--color-ink-950)] font-semibold text-[14px] opacity-50 cursor-not-allowed"
                   >
                     Commander
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                   <p className="text-[11px] text-[var(--color-foreground-muted)] mt-3 leading-relaxed">
                     Disponible après connexion de votre fiche Google

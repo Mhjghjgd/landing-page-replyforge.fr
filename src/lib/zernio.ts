@@ -66,17 +66,37 @@ export interface ZernioAccount {
 }
 
 export interface ZernioReview {
-  id: string;
-  rating: number;
+  id?: string;
+  _id?: string;
+  reviewId?: string;
+  rating?: number;
+  starRating?: number;
+  stars?: number;
   comment?: string;
+  text?: string;
+  content?: string;
+  body?: string;
+  message?: string;
   language?: string;
-  author: {
+  locale?: string;
+  author?: {
     name?: string;
+    displayName?: string;
     photoUrl?: string;
+    picture?: string;
   };
+  reviewer?: {
+    name?: string;
+    displayName?: string;
+    profilePhotoUrl?: string;
+  };
+  authorName?: string;
   createTime?: string;
+  createdAt?: string;
+  created_at?: string;
   updateTime?: string;
-  reply: { comment: string; updateTime?: string } | null;
+  updatedAt?: string;
+  reply?: { comment?: string; text?: string; updateTime?: string; updatedAt?: string } | null;
 }
 
 export interface ZernioConnectLocation {
@@ -172,6 +192,10 @@ export const zernio = {
     }
 
     console.log("[getReviews] Extracted", reviews.length, "reviews");
+    if (reviews.length > 0) {
+      console.log("[getReviews] FIRST review keys:", Object.keys(reviews[0] as object));
+      console.log("[getReviews] FIRST review full JSON:", JSON.stringify(reviews[0], null, 2));
+    }
     return { reviews };
   },
 

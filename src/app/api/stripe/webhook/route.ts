@@ -38,19 +38,6 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.user_id;
         if (!userId) break;
 
-        if (session.metadata?.order_type === "catchup") {
-          await supabase.from("catchup_orders").insert({
-            user_id: userId,
-            stripe_session_id: session.id,
-            stripe_payment_intent: session.payment_intent as string ?? null,
-            amount_paid: session.amount_total ?? 15000,
-            currency: session.currency ?? "eur",
-            status: "paid",
-          });
-          console.log("[Webhook] checkout.session.completed — catchup order for user", userId);
-          break;
-        }
-
         await supabase
           .from("profiles")
           .update({
