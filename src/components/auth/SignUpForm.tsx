@@ -153,7 +153,7 @@ export function SignUpForm() {
           )}
 
           <Button type="submit" className="w-full" size="md" disabled={loading}>
-            {loading ? "Création en cours…" : "Créer mon compte — 89 €/mois"}
+            {loading ? "Création en cours…" : "Créer mon compte — 229 €/mois"}
           </Button>
           <p className="text-center text-xs text-[var(--color-foreground-muted)]">
             Vous serez redirigé vers le paiement sécurisé Stripe.

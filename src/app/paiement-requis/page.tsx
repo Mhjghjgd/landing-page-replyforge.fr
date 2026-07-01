@@ -60,7 +60,7 @@ export default async function PaiementRequisPage() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[var(--color-foreground-muted)]">Abonnement</span>
-            <span className="text-sm text-[var(--color-foreground)] font-medium">89 €/mois</span>
+            <span className="text-sm text-[var(--color-foreground)] font-medium">229 €/mois</span>
           </div>
         </div>
 

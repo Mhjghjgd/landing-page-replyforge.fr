@@ -56,7 +56,7 @@ export function CTA() {
               </div>
               <div className="flex flex-col gap-3">
                 <Button href="/contact" size="lg" className="w-full">
-                  Démarrer à 89€/mois
+                  Démarrer à 229€/mois
                   <ArrowRight size={18} />
                 </Button>
                 <Button

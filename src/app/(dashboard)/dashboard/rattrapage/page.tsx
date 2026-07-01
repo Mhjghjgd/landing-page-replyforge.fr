@@ -72,7 +72,7 @@ export default async function RattrapagePage() {
                 Paiement unique
               </p>
               <div className="mb-1">
-                <span className="font-display text-5xl text-[var(--color-foreground)]">150</span>
+                <span className="font-display text-5xl text-[var(--color-foreground)]">249</span>
                 <span className="text-[18px] text-[var(--color-foreground)] font-medium"> €</span>
               </div>
               <p className="text-[12px] text-[var(--color-foreground-muted)] mb-6">

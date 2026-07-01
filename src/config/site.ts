@@ -8,7 +8,7 @@ export const siteConfig = {
   pricing: {
     subscription: {
       label: "Continu",
-      price: "89€",
+      price: "229€",
       cadence: "par mois",
       promise: "Réponses automatiques à chaque nouvel avis, en continu.",
     },

@@ -14,7 +14,6 @@ import {
   LogOut,
   Menu,
   X,
-  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -60,7 +59,7 @@ const navItems: NavItem[] = [
     label: "Rattrapage express",
     href: "/dashboard/rattrapage",
     icon: <Zap className="w-4 h-4" />,
-    badge: "150 €",
+    badge: "249 €",
   },
   {
     label: "Compte & facturation",
@@ -74,7 +73,6 @@ function SidebarContent({
   hotelName,
   fullName,
   email,
-  isAdmin,
   unrepliedCount,
   onClose,
 }: SidebarProps & { pathname: string; onClose?: () => void }) {
@@ -168,16 +166,6 @@ function SidebarContent({
           );
         })}
 
-        {isAdmin && (
-          <Link
-            href="/admin"
-            onClick={onClose}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13.5px] font-medium text-[var(--color-foreground-muted)] hover:bg-white/[0.04] hover:text-[var(--color-foreground)] transition-all duration-200 mt-2 border-t border-[var(--color-border)]/50 pt-3"
-          >
-            <Shield className="w-4 h-4 text-[var(--color-foreground-muted)]" />
-            Administration
-          </Link>
-        )}
       </nav>
 
       {/* Footer — avatar + signout */}

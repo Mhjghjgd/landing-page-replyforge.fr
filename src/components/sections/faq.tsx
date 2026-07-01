@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: "Je peux arrêter quand je veux ?",
-    a: "Oui. L'abonnement à 89€/mois est sans engagement. Vous résiliez en un mail, on coupe à la fin du mois en cours. Aucune pénalité.",
+    a: "Oui. L'abonnement à 229€/mois est sans engagement. Vous résiliez en un mail, on coupe à la fin du mois en cours. Aucune pénalité.",
   },
 ];
 

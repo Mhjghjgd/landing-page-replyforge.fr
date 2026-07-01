@@ -75,7 +75,7 @@ export default async function OG() {
           }}
         >
           <div>replyforge.fr</div>
-          <div style={{ color: "#C4973A" }}>89€/mois · sans engagement</div>
+          <div style={{ color: "#C4973A" }}>229€/mois · sans engagement</div>
         </div>
       </div>
     ),

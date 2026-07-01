@@ -210,7 +210,7 @@ export function AccountForm({
           </div>
           <div className="flex items-center justify-between py-3 border-b border-[var(--color-border)]/50">
             <span className="text-[13px] text-[var(--color-foreground-muted)]">Plan</span>
-            <span className="text-[13px] text-[var(--color-foreground)] font-medium">ReplyForge — 89 €/mois</span>
+            <span className="text-[13px] text-[var(--color-foreground)] font-medium">ReplyForge — 229 €/mois</span>
           </div>
           {formattedPeriodEnd && (
             <div className="flex items-center justify-between py-3 border-b border-[var(--color-border)]/50">
@@ -239,7 +239,7 @@ export function AccountForm({
             Gérer mon abonnement
           </button>
           <p className="mt-2 text-[11px] text-[var(--color-foreground-muted)]">
-            Factures, changement de carte, résiliation — géré via le portail Stripe.
+            Vous pouvez annuler à tout moment depuis cet espace, sans engagement.
           </p>
         </div>
       </div>

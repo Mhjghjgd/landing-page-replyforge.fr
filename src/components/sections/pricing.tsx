@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const plans = [
   {
     label: "Continu",
-    price: "89€",
+    price: "229€",
     cadence: "par mois",
     description: "On reste là. Chaque nouvel avis reçoit une réponse automatique dans les heures qui suivent sa publication.",
     features: [

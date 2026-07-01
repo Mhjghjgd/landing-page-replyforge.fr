@@ -130,7 +130,7 @@ export default function CGVPage() {
             <h2>5. Tarifs</h2>
             <p>
               L&apos;abonnement au Service est facturé{" "}
-              <strong>89 € TTC par mois</strong>.
+              <strong>229 € TTC par mois</strong>.
             </p>
             <p>
               TVA : en application de l&apos;article 293 B du Code général des
