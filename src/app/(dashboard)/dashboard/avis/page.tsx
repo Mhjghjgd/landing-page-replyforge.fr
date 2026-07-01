@@ -138,7 +138,7 @@ export default async function AvisPage({
   let query = supabase
     .from("reviews")
     .select(
-      "id, zernio_review_id, author_name, author_photo_url, rating, review_text, review_language, review_created_at, ai_generated_reply, ai_generated_at, ai_model_used, reply_state, reply_text",
+      "id, user_id, zernio_review_id, author_name, author_photo_url, rating, review_text, review_language, review_created_at, review_updated_at, reply_text, reply_published_at, reply_state, ai_generated_reply, ai_generated_at, ai_model_used, imported_at, updated_at",
       { count: "exact" }
     )
     .eq("user_id", user!.id);
