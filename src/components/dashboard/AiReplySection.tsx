@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2, Sparkles, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
 import type { Review } from "@/types/database";
 
@@ -9,8 +8,8 @@ interface Props {
   review: Review;
 }
 
-export function AiReplySection({ review }: Props) {
-  const router = useRouter();
+export function AiReplySection({ review: initialReview }: Props) {
+  const [review, setReview] = useState(initialReview);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +58,11 @@ export function AiReplySection({ review }: Props) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Erreur lors de la génération");
-      router.refresh();
+      setReview({
+        ...review,
+        ai_generated_reply: data.reply,
+        reply_state: "generated",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inconnue");
     } finally {

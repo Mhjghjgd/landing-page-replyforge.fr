@@ -96,7 +96,7 @@ export async function POST(_req: NextRequest) {
       if (!error) synced = rows.length;
     }
 
-    // Auto-génération IA pour avis sans réponse
+    // Avis sans réponse IA générée, à générer côté client après la sync
     const { data: reviewsToGenerate } = await service
       .from("reviews")
       .select("id")
@@ -105,21 +105,7 @@ export async function POST(_req: NextRequest) {
       .is("ai_generated_reply", null)
       .not("reply_state", "eq", "failed");
 
-    if (reviewsToGenerate && reviewsToGenerate.length > 0) {
-      console.log(`[sync] Auto-generating AI replies for ${reviewsToGenerate.length} reviews`);
-      Promise.all(
-        reviewsToGenerate.map((r) =>
-          fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/ai/generate-reply-internal`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-internal-key": process.env.INTERNAL_API_KEY ?? "",
-            },
-            body: JSON.stringify({ reviewId: r.id, userId: user.id }),
-          }).catch((e) => console.error("[sync] AI gen failed for", r.id, e))
-        )
-      ).catch(() => {});
-    }
+    const reviewIds = reviewsToGenerate?.map((r) => r.id) ?? [];
 
     const avgRating =
       reviews.length > 0
@@ -137,7 +123,7 @@ export async function POST(_req: NextRequest) {
       })
       .eq("user_id", user.id);
 
-    return NextResponse.json({ synced });
+    return NextResponse.json({ success: true, synced, reviewIds });
   } catch (err) {
     const message =
       err instanceof ZernioError ? err.message : "Erreur lors de la synchronisation.";
