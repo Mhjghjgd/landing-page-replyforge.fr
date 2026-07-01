@@ -38,12 +38,27 @@ export function SignUpForm() {
     });
 
     if (signUpError) {
-      if (signUpError.message.includes("already registered")) {
+      console.error("[signup] Supabase error:", signUpError, "status:", (signUpError as any).status);
+      const msg = signUpError.message ?? "";
+      const status = (signUpError as any).status as number | undefined;
+
+      if (
+        msg.includes("already registered") ||
+        msg.includes("email address has already been registered") ||
+        // Supabase returns {} body on 422 → SDK produces "{}" as the message
+        msg === "{}" ||
+        status === 422
+      ) {
         setError("Cet email est déjà utilisé. Essayez de vous connecter.");
-      } else if (signUpError.message.includes("Password should be at least")) {
+      } else if (msg.includes("Password should be at least") || msg.includes("password")) {
         setError("Le mot de passe doit contenir au moins 8 caractères.");
+      } else if (msg.includes("rate limit") || status === 429) {
+        setError("Trop de tentatives. Attendez quelques secondes et réessayez.");
+      } else if (!msg || msg.startsWith("{") || msg.startsWith("[")) {
+        // Non-human-readable body — show generic message and let console.error do the rest
+        setError("Une erreur est survenue. Vérifiez votre connexion et réessayez.");
       } else {
-        setError(signUpError.message);
+        setError(msg);
       }
       setLoading(false);
       return;
@@ -71,7 +86,8 @@ export function SignUpForm() {
       // Hard redirect to Stripe (or /dashboard if already active)
       window.location.href = data.url;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur inattendue");
+      console.error("[signup] Checkout error:", err);
+      setError(err instanceof Error ? err.message : "Erreur inattendue. Réessayez.");
       setStep("form");
       setLoading(false);
     }
