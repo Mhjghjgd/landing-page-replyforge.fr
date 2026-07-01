@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { zernio, ZernioError, type ZernioReview } from "@/lib/zernio";
+import { zernio, ZernioError, extractShortId, type ZernioReview } from "@/lib/zernio";
 
 export const runtime = "nodejs";
 
@@ -60,7 +60,7 @@ export async function POST(_req: NextRequest) {
     if (reviews.length > 0) {
       const rows = reviews.map((r: any) => ({
         user_id: user.id,
-        zernio_review_id: r.id ?? r._id ?? r.reviewId,
+        zernio_review_id: extractShortId(r.id ?? r._id ?? r.reviewId ?? r.name ?? ""),
         author_name:
           r.author?.name ??
           r.author?.displayName ??

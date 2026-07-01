@@ -1,5 +1,16 @@
 const BASE_URL = process.env.ZERNIO_API_URL ?? "https://zernio.com/api/v1";
 
+/**
+ * Google Business Profile returns review IDs as full resource names:
+ * "accounts/x/locations/y/reviews/AbFvOq..."
+ * Zernio passes these through. We only need the last segment for our endpoints.
+ */
+export function extractShortId(rawId: string): string {
+  if (!rawId) return rawId;
+  const idx = rawId.lastIndexOf("/");
+  return idx >= 0 ? rawId.slice(idx + 1) : rawId;
+}
+
 export class ZernioError extends Error {
   constructor(
     public status: number,
@@ -214,7 +225,10 @@ export const zernio = {
     ),
 
   publishReviewReply: (accountId: string, reviewId: string, replyText: string) => {
-    const path = `/accounts/${encodeURIComponent(accountId)}/gmb-reviews/${encodeURIComponent(reviewId)}/reply`;
+    const shortId = extractShortId(reviewId);
+    console.log("[publishReviewReply] raw reviewId:", reviewId, "→ extracted:", shortId);
+    console.log("[publishReviewReply] accountId:", accountId);
+    const path = `/accounts/${encodeURIComponent(accountId)}/gmb-reviews/${encodeURIComponent(shortId)}/reply`;
     const bodyPayload = { comment: replyText, text: replyText };
     console.log("[publishReviewReply] POST", path);
     console.log("[publishReviewReply] body:", JSON.stringify(bodyPayload));
@@ -225,7 +239,10 @@ export const zernio = {
   },
 
   deleteReviewReply: (accountId: string, reviewId: string) => {
-    const path = `/accounts/${encodeURIComponent(accountId)}/gmb-reviews/${encodeURIComponent(reviewId)}/reply`;
+    const shortId = extractShortId(reviewId);
+    console.log("[deleteReviewReply] raw reviewId:", reviewId, "→ extracted:", shortId);
+    console.log("[deleteReviewReply] accountId:", accountId);
+    const path = `/accounts/${encodeURIComponent(accountId)}/gmb-reviews/${encodeURIComponent(shortId)}/reply`;
     console.log("[deleteReviewReply] DELETE", path);
     return zernioFetch<null>(path, { method: "DELETE" });
   },
