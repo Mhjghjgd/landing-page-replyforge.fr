@@ -96,6 +96,7 @@ export async function POST(_req: NextRequest) {
     }
 
     // Avis sans réponse IA générée, à générer côté client après la sync
+    // .or() explicite pour couvrir reply_state NULL (NOT(NULL='failed')=NULL en SQL, exclut la ligne)
     const { data: reviewsToGenerate } = await service
       .from("reviews")
       .select("id")
@@ -103,6 +104,8 @@ export async function POST(_req: NextRequest) {
       .is("reply_text", null)
       .is("ai_generated_reply", null)
       .or("reply_state.is.null,reply_state.neq.failed");
+
+    console.log("[sync] reviewsToGenerate found:", reviewsToGenerate?.length, reviewsToGenerate?.map(r => r.id));
 
     const reviewIds = reviewsToGenerate?.map((r) => r.id) ?? [];
 
