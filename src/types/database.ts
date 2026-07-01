@@ -4,7 +4,7 @@ export type ResponseStatus = "pending" | "published" | "failed";
 export type CatchupJobStatus = "pending" | "processing" | "completed" | "failed";
 export type ResponseLength = "short" | "medium" | "long";
 export type SyncStatus = "idle" | "syncing" | "error";
-export type ReplyState = "PENDING" | "ACTIVE" | "REJECTED" | "generated" | "failed";
+export type ReplyState = "PENDING" | "ACTIVE" | "REJECTED" | "generated" | "published" | "edited" | "failed";
 
 export interface Profile {
   id: string;

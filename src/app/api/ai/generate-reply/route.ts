@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { zernio } from "@/lib/zernio";
 import Anthropic from "@anthropic-ai/sdk";
 
 export const runtime = "nodejs";
@@ -17,18 +18,17 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { reviewId } = body as { reviewId: string };
+  const { reviewId, force } = body as { reviewId: string; force?: boolean };
 
   if (!reviewId) {
     return NextResponse.json({ error: "Missing reviewId" }, { status: 400 });
   }
 
-  // Use service client for DB writes to bypass RLS restrictions
   const service = createServiceClient();
 
   const { data: review, error: reviewError } = await supabase
     .from("reviews")
-    .select("id, rating, review_text, review_language, reply_state, ai_generated_reply")
+    .select("id, zernio_review_id, rating, review_text, review_language, reply_state, ai_generated_reply")
     .eq("id", reviewId)
     .eq("user_id", user.id)
     .single();
@@ -38,26 +38,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Review not found" }, { status: 404 });
   }
 
-  if (review.ai_generated_reply) {
+  if (review.ai_generated_reply && !force) {
     console.log("[generate-reply] Already generated for", reviewId, "— returning cached");
-    return NextResponse.json({ success: true, reply: review.ai_generated_reply });
+    return NextResponse.json({
+      success: true,
+      reply: review.ai_generated_reply,
+      published: review.reply_state === "published" || review.reply_state === "edited",
+    });
   }
 
-  console.log("[generate-reply] Starting generation for review", reviewId, "state:", review.reply_state);
+  console.log("[generate-reply] Starting generation for review", reviewId, "force:", !!force);
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  const { data: profile } = await supabase
-    .from("tone_profiles")
-    .select("positioning, tone_level, response_length, signature, strengths, sensitive_topics")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  const { data: connection } = await supabase
-    .from("zernio_connections")
-    .select("business_name")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const [{ data: profile }, { data: connection }] = await Promise.all([
+    supabase
+      .from("tone_profiles")
+      .select("positioning, tone_level, response_length, signature, strengths, sensitive_topics")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("zernio_connections")
+      .select("business_name, zernio_account_id")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
 
   const hotelName = connection?.business_name ?? "cet établissement";
   const positioning = profile?.positioning ?? "charme";
@@ -108,7 +113,7 @@ RÈGLES STRICTES :
     const content = message.content[0];
     const generatedReply = content.type === "text" ? content.text.trim() : "";
 
-    // Use service client to bypass RLS — guaranteed write even if user policy is restrictive
+    // Save the generated reply first
     const { error: updateError } = await service
       .from("reviews")
       .update({
@@ -122,7 +127,7 @@ RÈGLES STRICTES :
       .eq("user_id", user.id);
 
     if (updateError) {
-      console.error("[generate-reply] DB update failed for", reviewId, updateError);
+      console.error("[generate-reply] DB save failed for", reviewId, updateError);
       await service
         .from("reviews")
         .update({ reply_state: "failed", updated_at: new Date().toISOString() })
@@ -131,8 +136,40 @@ RÈGLES STRICTES :
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
     }
 
-    console.log("[generate-reply] SUCCESS for review", reviewId);
-    return NextResponse.json({ success: true, reply: generatedReply });
+    console.log("[generate-reply] AI reply saved for review", reviewId);
+
+    // Auto-publish to Google via Zernio
+    let published = false;
+    const accountId = connection?.zernio_account_id;
+    const zernioReviewId = review.zernio_review_id;
+
+    if (accountId && zernioReviewId) {
+      try {
+        const publishResult = await zernio.publishReviewReply(accountId, zernioReviewId, generatedReply);
+        console.log("[generate-reply] Zernio publish result:", JSON.stringify(publishResult));
+
+        await service
+          .from("reviews")
+          .update({
+            reply_text: generatedReply,
+            reply_state: "published",
+            reply_published_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", reviewId)
+          .eq("user_id", user.id);
+
+        published = true;
+        console.log("[generate-reply] Published to Google for review", reviewId);
+      } catch (publishErr) {
+        console.error("[generate-reply] Zernio publish failed for", reviewId, publishErr);
+        // Keep reply_state = 'generated' — reply saved in DB but not on Google yet
+      }
+    } else {
+      console.warn("[generate-reply] Cannot publish — missing accountId:", accountId, "or zernio_review_id:", zernioReviewId);
+    }
+
+    return NextResponse.json({ success: true, reply: generatedReply, published });
   } catch (err) {
     console.error("[generate-reply] Claude API error for review", reviewId, err);
     await service

@@ -47,7 +47,15 @@ async function zernioFetch<T>(path: string, init: RequestInit = {}): Promise<T> 
     throw new ZernioError(res.status, code, `${message} (body: ${bodyText.slice(0, 200)})`);
   }
 
-  return res.json() as Promise<T>;
+  // Handle empty body (e.g. 204 No Content on DELETE)
+  const text = await res.text();
+  if (!text.trim()) return null as T;
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    console.warn("[zernioFetch] Non-JSON response body:", text.slice(0, 200));
+    return null as T;
+  }
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -204,4 +212,21 @@ export const zernio = {
       `/inbox/review-reply/${encodeURIComponent(reviewId)}`,
       { method: "POST", body: JSON.stringify({ comment, accountId }) }
     ),
+
+  publishReviewReply: (accountId: string, reviewId: string, replyText: string) => {
+    const path = `/accounts/${encodeURIComponent(accountId)}/gmb-reviews/${encodeURIComponent(reviewId)}/reply`;
+    const bodyPayload = { comment: replyText, text: replyText };
+    console.log("[publishReviewReply] POST", path);
+    console.log("[publishReviewReply] body:", JSON.stringify(bodyPayload));
+    return zernioFetch<{ success?: boolean; id?: string } | null>(path, {
+      method: "POST",
+      body: JSON.stringify(bodyPayload),
+    });
+  },
+
+  deleteReviewReply: (accountId: string, reviewId: string) => {
+    const path = `/accounts/${encodeURIComponent(accountId)}/gmb-reviews/${encodeURIComponent(reviewId)}/reply`;
+    console.log("[deleteReviewReply] DELETE", path);
+    return zernioFetch<null>(path, { method: "DELETE" });
+  },
 };
