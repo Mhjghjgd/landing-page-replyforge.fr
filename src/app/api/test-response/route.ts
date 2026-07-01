@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 const SAMPLE_REVIEWS: Record<string, { rating: number; text: string }> = {
   "5": {
     rating: 5,
@@ -72,6 +70,7 @@ RÈGLES STRICTES :
 
   const userMessage = `Avis ${review.rating}★ :\n"${review.text}"\n\nGénère la réponse de l'hôtelier.`;
 
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const message = await anthropic.messages.create({
     model: "claude-sonnet-4-5",
     max_tokens: 400,

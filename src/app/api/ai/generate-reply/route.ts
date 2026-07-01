@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import Anthropic from "@anthropic-ai/sdk";
 
 export const runtime = "nodejs";
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -13,6 +12,7 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
+    console.error("[generate-reply] Unauthorized — no session");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -22,6 +22,9 @@ export async function POST(request: NextRequest) {
   if (!reviewId) {
     return NextResponse.json({ error: "Missing reviewId" }, { status: 400 });
   }
+
+  // Use service client for DB writes to bypass RLS restrictions
+  const service = createServiceClient();
 
   const { data: review, error: reviewError } = await supabase
     .from("reviews")
@@ -36,8 +39,13 @@ export async function POST(request: NextRequest) {
   }
 
   if (review.ai_generated_reply) {
+    console.log("[generate-reply] Already generated for", reviewId, "— returning cached");
     return NextResponse.json({ success: true, reply: review.ai_generated_reply });
   }
+
+  console.log("[generate-reply] Starting generation for review", reviewId, "state:", review.reply_state);
+
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   const { data: profile } = await supabase
     .from("tone_profiles")
@@ -100,7 +108,8 @@ RÈGLES STRICTES :
     const content = message.content[0];
     const generatedReply = content.type === "text" ? content.text.trim() : "";
 
-    const { error: updateError } = await supabase
+    // Use service client to bypass RLS — guaranteed write even if user policy is restrictive
+    const { error: updateError } = await service
       .from("reviews")
       .update({
         ai_generated_reply: generatedReply,
@@ -112,11 +121,9 @@ RÈGLES STRICTES :
       .eq("id", reviewId)
       .eq("user_id", user.id);
 
-    console.log("[generate-reply] UPDATE result:", updateError ?? "OK");
-
     if (updateError) {
-      console.error("[generate-reply] Update failed:", reviewId, updateError);
-      await supabase
+      console.error("[generate-reply] DB update failed for", reviewId, updateError);
+      await service
         .from("reviews")
         .update({ reply_state: "failed", updated_at: new Date().toISOString() })
         .eq("id", reviewId)
@@ -124,10 +131,11 @@ RÈGLES STRICTES :
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
     }
 
+    console.log("[generate-reply] SUCCESS for review", reviewId);
     return NextResponse.json({ success: true, reply: generatedReply });
   } catch (err) {
-    console.error("[generate-reply] Claude error for review", reviewId, err);
-    await supabase
+    console.error("[generate-reply] Claude API error for review", reviewId, err);
+    await service
       .from("reviews")
       .update({ reply_state: "failed", updated_at: new Date().toISOString() })
       .eq("id", reviewId)

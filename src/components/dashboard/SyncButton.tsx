@@ -22,18 +22,40 @@ export function SyncButton() {
         return;
       }
 
+      const reviewIds: string[] = data.reviewIds ?? [];
+      console.log("[SyncButton] sync complete — synced:", data.synced, "to generate:", reviewIds.length, reviewIds);
+
       setToast({ type: "success", msg: `${data.synced} avis synchronisés.` });
 
-      if (data.reviewIds && data.reviewIds.length > 0) {
+      if (reviewIds.length > 0) {
         setGenerating(true);
-        for (const reviewId of data.reviewIds as string[]) {
-          await fetch("/api/ai/generate-reply", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reviewId }),
-          }).catch(() => {});
+        let generated = 0;
+        let failed = 0;
+        for (const reviewId of reviewIds) {
+          try {
+            const genRes = await fetch("/api/ai/generate-reply", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ reviewId }),
+            });
+            if (genRes.ok) {
+              generated++;
+              console.log("[SyncButton] generated reply for", reviewId);
+            } else {
+              failed++;
+              const errBody = await genRes.json().catch(() => ({}));
+              console.error("[SyncButton] generate-reply failed for", reviewId, genRes.status, errBody);
+            }
+          } catch (e) {
+            failed++;
+            console.error("[SyncButton] network error for", reviewId, e);
+          }
         }
+        console.log("[SyncButton] generation done — ok:", generated, "failed:", failed);
         setGenerating(false);
+        if (generated > 0) {
+          setToast({ type: "success", msg: `${data.synced} avis synchronisés · ${generated} réponses IA générées.` });
+        }
       }
 
       router.refresh();
