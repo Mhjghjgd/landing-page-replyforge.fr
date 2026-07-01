@@ -30,8 +30,9 @@ export default async function DashboardPage() {
   const { data: reviews } = hasGoogle
     ? await supabase
         .from("reviews")
-        .select("rating, reply_text, review_created_at")
+        .select("rating, reply_text, review_created_at, author_name, review_text")
         .eq("user_id", user!.id)
+        .order("review_created_at", { ascending: false, nullsFirst: false })
     : { data: null };
 
   const totalReviews = reviews?.length ?? 0;
@@ -201,42 +202,49 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="divide-y divide-[var(--color-border)]">
-            {reviews.slice(0, 5).map((_, i) => (
-              <div key={i} className="px-6 py-4">
-                <p className="text-[13px] text-[var(--color-foreground-muted)]">
-                  {["★★★★★", "★★★★", "★★★★★", "★★★", "★★★★★"][i % 5]} Avis importé
-                </p>
-              </div>
-            ))}
+            {reviews.slice(0, 5).map((r, i) => {
+              const stars = r.rating ? "★".repeat(r.rating) + "☆".repeat(5 - r.rating) : "—";
+              const snippet = r.review_text
+                ? r.review_text.length > 100
+                  ? r.review_text.slice(0, 100) + "…"
+                  : r.review_text
+                : null;
+              return (
+                <div key={i} className="px-6 py-4">
+                  <div className="flex items-center justify-between gap-3 mb-1">
+                    <span className="text-[13px] font-medium text-[var(--color-foreground)]">
+                      {r.author_name ?? "Anonyme"}
+                    </span>
+                    <span className="text-[12px] text-[var(--color-gold-400)] shrink-0">
+                      {stars}
+                    </span>
+                  </div>
+                  {snippet && (
+                    <p className="text-[12px] text-[var(--color-foreground-muted)] leading-relaxed">
+                      {snippet}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Chart placeholder */}
-      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-        <div className="px-6 py-4 border-b border-[var(--color-border)]">
-          <h2 className="font-display text-xl text-[var(--color-foreground)]">Évolution de votre note</h2>
+      {/* Stats teaser */}
+      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 flex items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-xl text-[var(--color-foreground)] mb-1">Statistiques détaillées</h2>
+          <p className="text-[13px] text-[var(--color-foreground-muted)]">
+            Évolution de note, répartition des étoiles, langues et taux de réponse.
+          </p>
         </div>
-        <div className="relative p-6">
-          <div className="h-40 flex items-end gap-2 opacity-15">
-            {[40, 55, 45, 70, 60, 80, 65, 85, 75, 90, 80, 95].map((h, i) => (
-              <div
-                key={i}
-                className="flex-1 rounded-t bg-[var(--color-gold-400)]"
-                style={{ height: `${h}%` }}
-              />
-            ))}
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center bg-[var(--color-surface)]/80 backdrop-blur-sm rounded-xl px-6 py-4 border border-[var(--color-border)]">
-              <p className="text-[13px] text-[var(--color-foreground-muted)]">
-                {hasGoogle
-                  ? "Bientôt disponible"
-                  : "Disponible après la connexion de votre fiche Google"}
-              </p>
-            </div>
-          </div>
-        </div>
+        <Link
+          href="/dashboard/statistiques"
+          className="shrink-0 inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-gold-400)] hover:text-[var(--color-gold-300)] transition-colors"
+        >
+          Voir →
+        </Link>
       </div>
     </div>
   );

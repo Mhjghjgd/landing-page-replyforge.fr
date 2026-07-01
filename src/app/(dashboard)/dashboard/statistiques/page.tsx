@@ -32,9 +32,9 @@ export default async function StatistiquesPage() {
 
   const { data: reviews } = await supabase
     .from("reviews")
-    .select("rating, review_created_at, reply_state, reply_published_at, ai_generated_at, review_language")
+    .select("rating, review_created_at, imported_at, reply_state, reply_published_at, ai_generated_at, review_language")
     .eq("user_id", user!.id)
-    .order("review_created_at", { ascending: true });
+    .order("imported_at", { ascending: true });
 
   const total = reviews?.length ?? 0;
 
@@ -62,8 +62,9 @@ export default async function StatistiquesPage() {
   const volumeBuckets = new Map<string, number>();
 
   for (const r of reviews ?? []) {
-    if (!r.review_created_at) continue;
-    const d = new Date(r.review_created_at);
+    const dateStr = r.review_created_at ?? r.imported_at;
+    if (!dateStr) continue;
+    const d = new Date(dateStr);
     const label = useMonths ? getMonthLabel(d) : getWeekLabel(d);
 
     if (r.rating) {
@@ -96,8 +97,8 @@ export default async function StatistiquesPage() {
   // ── Language distribution ─────────────────────────────────────────────────
   const langMap = new Map<string, number>();
   for (const r of reviews ?? []) {
-    const lang = r.review_language?.toLowerCase().slice(0, 2) ?? "??";
-    const label = lang === "fr" ? "Français" : lang === "en" ? "English" : lang === "de" ? "Deutsch" : lang === "es" ? "Español" : lang === "it" ? "Italiano" : lang.toUpperCase();
+    const lang = r.review_language?.toLowerCase().slice(0, 2) ?? null;
+    const label = !lang ? "Inconnu" : lang === "fr" ? "Français" : lang === "en" ? "English" : lang === "de" ? "Deutsch" : lang === "es" ? "Español" : lang === "it" ? "Italiano" : lang.toUpperCase();
     langMap.set(label, (langMap.get(label) ?? 0) + 1);
   }
   const langDist: LangDist[] = Array.from(langMap.entries())

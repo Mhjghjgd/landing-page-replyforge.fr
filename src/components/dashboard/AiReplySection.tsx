@@ -11,6 +11,7 @@ import {
   Trash2,
   X,
   Check,
+  Clock,
 } from "lucide-react";
 import type { Review } from "@/types/database";
 
@@ -34,6 +35,7 @@ export function AiReplySection({ review: initialReview }: Props) {
 
   const isAiPublished =
     review.reply_state === "published" || review.reply_state === "edited";
+  const isScheduled = review.reply_state === "scheduled";
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
 
@@ -52,7 +54,8 @@ export function AiReplySection({ review: initialReview }: Props) {
         ...review,
         ai_generated_reply: data.reply,
         reply_text: data.published ? data.reply : review.reply_text,
-        reply_state: data.published ? "published" : "generated",
+        reply_state: data.scheduled ? "scheduled" : data.published ? "published" : "generated",
+        scheduled_publish_at: data.scheduled ? data.scheduledAt : review.scheduled_publish_at,
         reply_published_at: data.published ? new Date().toISOString() : review.reply_published_at,
       });
       setEditMode(false);
@@ -237,6 +240,65 @@ export function AiReplySection({ review: initialReview }: Props) {
           </div>
         )}
 
+        {error && <p className="mt-2 text-[11px] text-red-400">{error}</p>}
+      </div>
+    );
+  }
+
+  // Scheduled — waiting for cron to publish
+  if (isScheduled && review.ai_generated_reply) {
+    const scheduledDate = review.scheduled_publish_at
+      ? new Date(review.scheduled_publish_at).toLocaleString("fr-FR", {
+          day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+        })
+      : null;
+
+    const handlePublishNow = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/ai/edit-reply", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reviewId: review.id, newText: review.ai_generated_reply }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "Erreur");
+        setReview({
+          ...review,
+          reply_text: review.ai_generated_reply,
+          reply_state: "published",
+          scheduled_publish_at: null,
+          reply_published_at: new Date().toISOString(),
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur inconnue");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <Clock className="w-3 h-3" />
+            {scheduledDate ? `Publication prévue le ${scheduledDate}` : "Publication planifiée"}
+          </span>
+          <button
+            onClick={handlePublishNow}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg text-[var(--color-foreground-muted)] border border-[var(--color-border)] hover:text-[var(--color-foreground)] disabled:opacity-50 transition-colors"
+          >
+            {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+            Publier maintenant
+          </button>
+        </div>
+        <div className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-3.5">
+          <p className="text-[12px] text-[var(--color-foreground)] leading-relaxed whitespace-pre-wrap">
+            {review.ai_generated_reply}
+          </p>
+        </div>
         {error && <p className="mt-2 text-[11px] text-red-400">{error}</p>}
       </div>
     );

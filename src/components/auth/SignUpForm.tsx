@@ -29,7 +29,7 @@ export function SignUpForm() {
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
 
     const supabase = createClient();
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -53,7 +53,15 @@ export function SignUpForm() {
     setStep("checkout");
 
     try {
-      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (signUpData.session?.access_token) {
+        headers["Authorization"] = `Bearer ${signUpData.session.access_token}`;
+      }
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ userId: signUpData.user?.id }),
+      });
       const data = await res.json();
 
       if (!res.ok || !data.url) {

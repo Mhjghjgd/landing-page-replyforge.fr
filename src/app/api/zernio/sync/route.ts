@@ -29,7 +29,7 @@ export async function POST(_req: NextRequest) {
 
   const { data: connection } = await service
     .from("zernio_connections")
-    .select("zernio_account_id")
+    .select("zernio_account_id, connected_at")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -95,17 +95,33 @@ export async function POST(_req: NextRequest) {
       if (!error) synced = rows.length;
     }
 
-    // Avis sans réponse IA générée, à générer côté client après la sync
-    // .or() explicite pour couvrir reply_state NULL (NOT(NULL='failed')=NULL en SQL, exclut la ligne)
-    const { data: reviewsToGenerate } = await service
+    // Check if this user has a paid catchup order (bypasses date filter)
+    const { data: catchupOrder } = await service
+      .from("catchup_orders")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("status", "paid")
+      .maybeSingle();
+
+    // Auto-reply only applies to reviews received after the Google connection date,
+    // unless the user has purchased Pack Rattrapage.
+    const connectedAt = connection.connected_at ?? null;
+
+    let reviewsQuery = service
       .from("reviews")
       .select("id")
       .eq("user_id", user.id)
       .is("reply_text", null)
       .is("ai_generated_reply", null)
-      .or("reply_state.is.null,reply_state.neq.failed");
+      .or("reply_state.is.null,reply_state.neq.failed,reply_state.neq.scheduled");
 
-    console.log("[sync] reviewsToGenerate found:", reviewsToGenerate?.length, reviewsToGenerate?.map(r => r.id));
+    if (!catchupOrder && connectedAt) {
+      reviewsQuery = reviewsQuery.gte("review_created_at", connectedAt);
+    }
+
+    const { data: reviewsToGenerate } = await reviewsQuery;
+
+    console.log("[sync] reviewsToGenerate found:", reviewsToGenerate?.length, "catchup:", !!catchupOrder, "connectedAt:", connectedAt);
 
     const reviewIds = reviewsToGenerate?.map((r) => r.id) ?? [];
 

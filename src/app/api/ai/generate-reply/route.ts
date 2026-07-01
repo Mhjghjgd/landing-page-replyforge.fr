@@ -1,8 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { zernio } from "@/lib/zernio";
 import Anthropic from "@anthropic-ai/sdk";
+
+function getScheduledPublishTime(): Date {
+  const now = new Date();
+  // Determine Paris local hour
+  const parisHour = parseInt(
+    new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }))
+      .toLocaleString("en-US", { hour: "numeric", hour12: false }),
+    10
+  );
+
+  if (parisHour >= 8 && parisHour < 20) {
+    // Business hours: random delay 90 min – 4 h
+    const minMs = 90 * 60 * 1000;
+    const maxMs = 4 * 60 * 60 * 1000;
+    return new Date(now.getTime() + minMs + Math.random() * (maxMs - minMs));
+  }
+
+  // Off-hours: schedule for tomorrow between 08:30 and 10:00 Paris time
+  // Paris is UTC+1 in winter (CET) or UTC+2 in summer (CEST).
+  // UTC 06:30-08:00 ≈ Paris 08:30-10:00 (CET); adjust by using a safe UTC window of 07:00-08:30.
+  const tomorrow = new Date(now);
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+  // Paris 08:30–10:00 in UTC is roughly 06:30–08:00 (CET) or 05:30–07:00 (CEST).
+  // Use 07:00–08:30 UTC as a conservative overlap that stays in-range for both offsets.
+  const minuteOffset = Math.floor(Math.random() * 90); // 0–89 min within the 90-min window
+  tomorrow.setUTCHours(7, minuteOffset, 0, 0);
+  return tomorrow;
+}
 
 export const runtime = "nodejs";
 
@@ -113,14 +140,17 @@ RÈGLES STRICTES :
     const content = message.content[0];
     const generatedReply = content.type === "text" ? content.text.trim() : "";
 
-    // Save the generated reply first
+    // Schedule the reply for anti-detection delayed publishing
+    const scheduledAt = getScheduledPublishTime();
+
     const { error: updateError } = await service
       .from("reviews")
       .update({
         ai_generated_reply: generatedReply,
         ai_generated_at: new Date().toISOString(),
         ai_model_used: "claude-sonnet-4-6",
-        reply_state: "generated",
+        reply_state: "scheduled",
+        scheduled_publish_at: scheduledAt.toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq("id", reviewId)
@@ -136,40 +166,9 @@ RÈGLES STRICTES :
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
     }
 
-    console.log("[generate-reply] AI reply saved for review", reviewId);
+    console.log("[generate-reply] Reply scheduled for review", reviewId, "at", scheduledAt.toISOString());
 
-    // Auto-publish to Google via Zernio
-    let published = false;
-    const accountId = connection?.zernio_account_id;
-    const zernioReviewId = review.zernio_review_id;
-
-    if (accountId && zernioReviewId) {
-      try {
-        const publishResult = await zernio.publishReviewReply(accountId, zernioReviewId, generatedReply);
-        console.log("[generate-reply] Zernio publish result:", JSON.stringify(publishResult));
-
-        await service
-          .from("reviews")
-          .update({
-            reply_text: generatedReply,
-            reply_state: "published",
-            reply_published_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", reviewId)
-          .eq("user_id", user.id);
-
-        published = true;
-        console.log("[generate-reply] Published to Google for review", reviewId);
-      } catch (publishErr) {
-        console.error("[generate-reply] Zernio publish failed for", reviewId, publishErr);
-        // Keep reply_state = 'generated' — reply saved in DB but not on Google yet
-      }
-    } else {
-      console.warn("[generate-reply] Cannot publish — missing accountId:", accountId, "or zernio_review_id:", zernioReviewId);
-    }
-
-    return NextResponse.json({ success: true, reply: generatedReply, published });
+    return NextResponse.json({ success: true, reply: generatedReply, scheduled: true, scheduledAt: scheduledAt.toISOString() });
   } catch (err) {
     console.error("[generate-reply] Claude API error for review", reviewId, err);
     await service
