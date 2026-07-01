@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Review } from "@/types/database";
 import { SyncButton } from "@/components/dashboard/SyncButton";
 import { ReviewFilterChips } from "@/components/dashboard/ReviewFilterChips";
+import { AiReplySection } from "@/components/dashboard/AiReplySection";
 
 export const metadata = { title: "Avis & réponses — ReplyForge" };
 
@@ -136,7 +137,10 @@ export default async function AvisPage({
   // Build query
   let query = supabase
     .from("reviews")
-    .select("*", { count: "exact" })
+    .select(
+      "id, zernio_review_id, author_name, author_photo_url, rating, review_text, review_language, review_created_at, ai_generated_reply, ai_generated_at, ai_model_used, reply_state, reply_text",
+      { count: "exact" }
+    )
     .eq("user_id", user!.id);
 
   if (ratingFilter !== "all") {
@@ -317,21 +321,9 @@ function ReviewCard({ review }: { review: Review }) {
             </p>
           )}
 
-          {/* Reply */}
-          {review.reply_text && (
-            <div className="mt-3 pl-3 border-l-2 border-[var(--color-gold-400)]/30">
-              <p className="text-[11px] font-medium text-[var(--color-gold-400)] mb-0.5">
-                Réponse du propriétaire
-              </p>
-              <p className="text-[12px] text-[var(--color-foreground-muted)] leading-relaxed">
-                {review.reply_text.length > 200
-                  ? review.reply_text.slice(0, 200) + "…"
-                  : review.reply_text}
-              </p>
-            </div>
-          )}
         </div>
       </div>
+      <AiReplySection review={review} />
     </div>
   );
 }

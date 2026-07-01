@@ -96,6 +96,31 @@ export async function POST(_req: NextRequest) {
       if (!error) synced = rows.length;
     }
 
+    // Auto-génération IA pour avis sans réponse
+    const { data: reviewsToGenerate } = await service
+      .from("reviews")
+      .select("id")
+      .eq("user_id", user.id)
+      .is("reply_text", null)
+      .is("ai_generated_reply", null)
+      .not("reply_state", "eq", "failed");
+
+    if (reviewsToGenerate && reviewsToGenerate.length > 0) {
+      console.log(`[sync] Auto-generating AI replies for ${reviewsToGenerate.length} reviews`);
+      Promise.all(
+        reviewsToGenerate.map((r) =>
+          fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/ai/generate-reply-internal`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-internal-key": process.env.INTERNAL_API_KEY ?? "",
+            },
+            body: JSON.stringify({ reviewId: r.id, userId: user.id }),
+          }).catch((e) => console.error("[sync] AI gen failed for", r.id, e))
+        )
+      ).catch(() => {});
+    }
+
     const avgRating =
       reviews.length > 0
         ? reviews.reduce((s, r) => s + (r.rating ?? 0), 0) / reviews.length
