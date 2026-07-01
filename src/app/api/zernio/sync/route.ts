@@ -102,7 +102,7 @@ export async function POST(_req: NextRequest) {
       .eq("user_id", user.id)
       .is("reply_text", null)
       .is("ai_generated_reply", null)
-      .not("reply_state", "eq", "failed");
+      .or("reply_state.is.null,reply_state.neq.failed");
 
     const reviewIds = reviewsToGenerate?.map((r) => r.id) ?? [];
 
