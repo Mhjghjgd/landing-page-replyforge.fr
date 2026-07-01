@@ -112,6 +112,8 @@ RÈGLES STRICTES :
       .eq("id", reviewId)
       .eq("user_id", user.id);
 
+    console.log("[generate-reply] UPDATE result:", updateError ?? "OK");
+
     if (updateError) {
       console.error("[generate-reply] Update failed:", reviewId, updateError);
       await supabase

@@ -80,7 +80,6 @@ export async function POST(_req: NextRequest) {
         review_updated_at: r.updateTime ?? r.updatedAt ?? null,
         reply_text: r.reply?.comment ?? r.reply?.text ?? null,
         reply_published_at: r.reply?.updateTime ?? r.reply?.updatedAt ?? null,
-        reply_state: null,
         updated_at: new Date().toISOString(),
       }));
 
@@ -91,7 +90,7 @@ export async function POST(_req: NextRequest) {
 
       const { error } = await service
         .from("reviews")
-        .upsert(rows, { onConflict: "zernio_review_id" });
+        .upsert(rows, { onConflict: "zernio_review_id", ignoreDuplicates: false });
 
       if (!error) synced = rows.length;
     }

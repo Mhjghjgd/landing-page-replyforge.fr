@@ -147,7 +147,7 @@ export default async function AvisPage({
     query = query.eq("rating", parseInt(ratingFilter, 10));
   }
   if (statusFilter === "replied") {
-    query = query.not("reply_text", "is", null);
+    query = query.or("reply_text.not.is.null,reply_state.eq.generated,reply_state.eq.published");
   } else if (statusFilter === "unreplied") {
     query = query.is("reply_text", null);
   } else if (statusFilter === "pending") {
@@ -163,7 +163,7 @@ export default async function AvisPage({
   // Stats (always from all reviews, no filter)
   const { data: allReviews } = await supabase
     .from("reviews")
-    .select("rating, reply_text, review_created_at")
+    .select("rating, reply_text, reply_state, review_created_at")
     .eq("user_id", user!.id);
 
   const totalReviews = allReviews?.length ?? 0;
@@ -171,7 +171,9 @@ export default async function AvisPage({
     totalReviews > 0
       ? (allReviews!.reduce((s, r) => s + (r.rating ?? 0), 0) / totalReviews).toFixed(1)
       : null;
-  const repliedCount = allReviews?.filter((r) => r.reply_text).length ?? 0;
+  const repliedCount = allReviews?.filter(
+    (r) => r.reply_text || r.reply_state === "generated" || r.reply_state === "published"
+  ).length ?? 0;
   const unrepliedCount = totalReviews - repliedCount;
 
   const startOfMonth = new Date();
